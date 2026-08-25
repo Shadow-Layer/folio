@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio — State-driven Interface</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 id="site-title">Portfolio</h1>
+    <p class="muted">A state-driven, progressively revealing knowledge interface.</p>
+  </header>
+
+  <main id="app" class="app" role="main">
+    <section id="stage" class="stage" tabindex="0" aria-live="polite">
+      <div class="card" id="identity">
+        <h2>Identity</h2>
+        <p class="muted">No durable 'About' content found. Click to reveal available knowledge.</p>
+        <div class="actions">
+          <button id="btn-open">Explore</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>Built as a content-first, minimal skeleton. Add content files under /content to populate.</small>
+  </footer>
+
+  <script src="/main.js" type="module"></script>
+</body>
+</html>

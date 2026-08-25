@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "path": "about.md", "title": "About / Identity" },
+    { "path": "design-philosophy.md", "title": "Design Philosophy" },
+    { "path": "projects/town-ruins.md", "title": "Town Ruins", "summary": "Verified project content not provided." },
+    { "path": "projects/portfolio.md", "title": "Portfolio (this project)", "summary": "The portfolio as a project — self-describing." },
+    { "path": "research.md", "title": "Research / Thinking" },
+    { "path": "contact.md", "title": "Contact" }
+  ]
+}
