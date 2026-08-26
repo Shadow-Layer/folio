@@ -71,15 +71,41 @@ function sanitize(html) {
   return div.innerHTML;
 }
 
-// Simple markdown renderer: h1-h6, paragraphs, lists
+// Simple markdown renderer: h1-h6, paragraphs, lists, bold, code blocks
 function mdToHtml(md) {
   const lines = md.split(/\r?\n/);
   let out = '';
   let inList = false;
+  let inCodeBlock = false;
+  let codeContent = '';
 
   for (let line of lines) {
     const trimmed = line.trim();
     
+    // Code block fence
+    if (line.startsWith('```')) {
+      if (!inCodeBlock) {
+        // Starting a code block
+        if (inList) {
+          out += '</ul>';
+          inList = false;
+        }
+        inCodeBlock = true;
+        codeContent = '';
+      } else {
+        // Ending a code block
+        out += '<pre><code>' + sanitize(codeContent.trimEnd()) + '</code></pre>';
+        inCodeBlock = false;
+      }
+      continue;
+    }
+
+    if (inCodeBlock) {
+      codeContent += line + '\n';
+      continue;
+    }
+
+    // Empty line
     if (!trimmed) {
       out += '<p></p>';
       continue;
@@ -89,9 +115,9 @@ function mdToHtml(md) {
     if (line.startsWith('#')) {
       const m = line.match(/^(#{1,6})\s+(.*)$/);
       if (m) {
-        out += `<h${m[1].length}>${sanitize(m[2])}</h${m[1].length}>`;
+        out += `<h${m[1].length}>${sanitizeAndFormat(m[2])}</h${m[1].length}>`;
       } else {
-        out += `<p>${sanitize(line)}</p>`;
+        out += `<p>${sanitizeAndFormat(line)}</p>`;
       }
       if (inList) {
         out += '</ul>';
@@ -104,15 +130,7 @@ function mdToHtml(md) {
         out += '<ul>';
         inList = true;
       }
-      out += `<li>${sanitize(line.slice(2))}</li>`;
-    }
-    // Code blocks (backticks)
-    else if (line.startsWith('```')) {
-      if (inList) {
-        out += '</ul>';
-        inList = false;
-      }
-      out += '<pre><code>' + sanitize(line.slice(3)) + '</code></pre>';
+      out += `<li>${sanitizeAndFormat(line.slice(2))}</li>`;
     }
     // Regular paragraphs
     else {
@@ -120,15 +138,44 @@ function mdToHtml(md) {
         out += '</ul>';
         inList = false;
       }
-      out += `<p>${sanitize(trimmed)}</p>`;
+      out += `<p>${sanitizeAndFormat(trimmed)}</p>`;
     }
   }
 
   if (inList) {
     out += '</ul>';
   }
+  
+  if (inCodeBlock) {
+    // Unclosed code block: output what we have
+    out += '<pre><code>' + sanitize(codeContent.trimEnd()) + '</code></pre>';
+  }
 
   return out;
+}
+
+// Format text with **bold** while preserving HTML safety
+function sanitizeAndFormat(text) {
+  // Split on ** patterns, capturing the bold sections
+  const parts = text.split(/(\*\*[^*]+\*\*)/);
+  let html = '';
+  
+  for (const part of parts) {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      // Bold section
+      const content = part.slice(2, -2);
+      const div = document.createElement('div');
+      div.textContent = content;
+      html += '<strong>' + div.innerHTML + '</strong>';
+    } else if (part) {
+      // Regular text
+      const div = document.createElement('div');
+      div.textContent = part;
+      html += div.innerHTML;
+    }
+  }
+  
+  return html;
 }
 
 // Show topics menu

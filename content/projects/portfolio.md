@@ -130,13 +130,13 @@ No separate mobile framework or architecture. Single responsive design.
 **Files:**
 
 - `index.html` — Semantic HTML structure
-- `main.js` — State management and content loading (~140 lines)
-- `styles.css` — Layout, typography, responsive design (~60 lines)
+- `main.js` — State management, content loading, markdown rendering (343 lines)
+- `styles.css` — Layout, typography, responsive design, accessibility (336 lines)
 - `content/manifest.json` — Content index
 
-**Total JavaScript:** ~140 lines (no dependencies)
+**Total JavaScript:** 343 lines (no dependencies)
 
-**Total CSS:** ~60 lines (no framework)
+**Total CSS:** 336 lines (no framework)
 
 **Build process:** None. Static files served directly.
 

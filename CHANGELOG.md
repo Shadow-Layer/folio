@@ -2,6 +2,72 @@
 
 ## 2608
 
+### 1346
+
+| Field      | Value                                   |
+| ---------- | --------------------------------------- |
+| Author     | Tea                                     |
+| Identifier | 1346                                    |
+| Date       | 2608                                    |
+| Year       | 26                                      |
+| Type       | Fix                                     |
+| Status     | ✅ Verified                              |
+| Validation | Passed                                  |
+| Scope      | Markdown renderer, changelog metadata, portfolio documentation |
+
+#### Summary
+
+Phase 5 Repair: Corrected three discrepancies identified during Phase 4 audit. (1) Updated CHANGELOG.md Phase 3 entry with accurate Git metadata (commit e867ce3). (2) Enhanced mdToHtml renderer to correctly handle multi-line fenced code blocks and **bold** text formatting in content. (3) Corrected line-count claims in portfolio.md to reflect actual implementation (343 lines main.js, 336 lines styles.css).
+
+#### Files Changed
+
+| Action   | File      |
+| -------- | --------- |
+| Modified  | CHANGELOG.md |
+| Modified  | main.js |
+| Modified  | content/projects/portfolio.md |
+
+#### Detailed Changes
+
+| Category      | Description |
+| ------------- | ----------- |
+| Fix           | Changelog: Corrected Phase 3 Git metadata from "(pending)" to actual commit e867ce3 |
+| Fix           | Markdown renderer: Added sanitizeAndFormat() function to support **bold** text with HTML safety |
+| Fix           | Markdown renderer: Implemented multi-line code block handling (collect lines between ``` fences) |
+| Fix           | Documentation: Updated main.js and styles.css line counts to actual values (343 and 336 respectively) |
+
+#### Validation Results
+
+| Check                  | Result |
+| ---------------------- | ------ |
+| Required files exist   | ✅      |
+| Manifest paths resolve | ✅      |
+| No duplicate files     | ✅      |
+| No dependencies        | ✅      |
+| No polling/intervals   | ✅      |
+| JavaScript syntax      | ✅      |
+| JSON validity          | ✅      |
+| State-driven rendering | ✅      |
+| Fetch-on-demand intact | ✅      |
+| Markdown durability    | ✅      |
+| Progressive disclosure | ✅      |
+| Town Ruins evidence    | ✅      |
+| No Aurora claims       | ✅      |
+| TODO/FIXME count       | 0 in implementation |
+| Architectural tests    | All 5 pass |
+
+#### Git
+
+| Field          | Value              |
+| -------------- | ------------------ |
+| Branch         | main               |
+| Commit(s)      | 3 files modified   |
+| Generated From | git status + repairs |
+
+---
+
+## 2608
+
 ### 0852
 
 | Field      | Value                                   |
@@ -84,8 +150,8 @@ Implement Phase 3 of portfolio: Complete evidence-backed content for design phil
 | Field          | Value              |
 | -------------- | ------------------ |
 | Branch         | main               |
-| Commit(s)      | (pending)          |
-| Generated From | git diff + git status |
+| Commit(s)      | e867ce3            |
+| Generated From | git log + git diff |
 
 ---
 
