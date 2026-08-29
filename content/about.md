@@ -1,18 +1,24 @@
 # About / Identity
 
-Tea is a systems-oriented software engineer focused on full-stack development, infrastructure, and operational systems.
+## Alvin Phiri — Software Engineer
 
-The work featured in this portfolio demonstrates proficiency in:
+I am Alvin Phiri, a Computer Science graduate and Software Engineer based in Zimbabwe.
 
-- **Application development** (React, TypeScript, Node.js)
-- **Database systems** (PostgreSQL, schema design, migrations)
-- **Infrastructure** (Docker, containerization, deployment)
-- **Payments and transactions** (reconciliation, multiple gateway integration)
-- **Operations** (notifications, background workers, moderation)
-- **Documentation** (technical writing, architecture records, runbooks)
+My hands-on work spans application and infrastructure layers: frontend and backend development, REST APIs, relational databases, authentication and authorization, containerized deployment, Linux systems, and operational troubleshooting.
 
-The primary evidence is **Town Ruins**, a rental marketplace that demonstrates all of these capabilities in an integrated system.
+The primary engineering project documented here is [Town Ruins](https://github.com/hwevaproduction-debug/towruins), a full-stack real-estate marketplace. It provides the deepest available evidence of how I work across a system rather than only within one application layer.
 
-This portfolio applies the philosophy it describes: knowledge-first architecture, state-driven interfaces, progressive disclosure, and evidence-backed claims.
+## Current direction
 
-See the **Design Philosophy** section to understand how and why this portfolio is constructed this way.
+I am interested in the boundary between software engineering, infrastructure, and systems architecture. I am currently developing deeper understanding of:
+
+- Distributed systems: consistency, queues, failure handling, and service coordination
+- Cloud architecture: deployment, networking, security, and resource management
+- Systems engineering: operating systems, concurrency, and the behavior of software under constraint
+- AI systems and orchestration: model use, state, routing, and tool-based workflows
+
+These are development areas, not claims of specialist seniority. The portfolio separates implemented work from the direction in which the work is moving.
+
+## Evidence level
+
+**Working** — The portfolio documents implemented software and infrastructure work, with Town Ruins as the primary technical evidence. The source repository and documentation links identify the artifacts behind the project claims.

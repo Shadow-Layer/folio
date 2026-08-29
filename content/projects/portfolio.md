@@ -20,7 +20,7 @@ The portfolio itself is evidence. It demonstrates:
 - State-driven interfaces (no polling, no continuous computation)
 - Progressive disclosure (interaction reveals depth)
 - Resource-aware design (minimal dependencies, lightweight execution)
-- Evidence-first claims (every technical decision is justified)
+- Evidence-first claims (technical decisions are described where evidence permits)
 - Interaction as navigation (interface reveals structure)
 - Complexity containment (calm surface, deep system)
 

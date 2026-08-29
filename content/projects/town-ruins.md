@@ -1,138 +1,93 @@
 # Town Ruins
 
-Town Ruins is a real-estate marketplace platform. It is the primary evidence of systems engineering capability.
+Town Ruins is a full-stack real-estate marketplace. It is the portfolio's deepest project because the available source and documentation cover application behavior, persistence, deployment configuration, and operations.
 
-## What It Is
+## Overview
 
-A rental housing marketplace built with React, Node.js, PostgreSQL, and Docker. Tenants search and book temporary stays; landlords manage properties. The system handles payments, notifications, moderation, and operational infrastructure for a multi-stakeholder platform.
+The system supports a marketplace in which tenants search and book temporary stays while landlords manage properties. The implementation spans frontend, backend, database, authentication, payments, notifications, moderation, and supporting infrastructure.
 
-## What It Demonstrates
+Alvin's documented contribution is software engineering across those layers: application code, backend routes and business logic, database-backed workflows, deployment configuration, and operational tooling. The evidence establishes implemented work; it does not establish live production status or business outcomes.
 
-### Application Engineering
+## Product layer
 
-- Full-stack development (frontend, backend, database)
-- User authentication (JWT + bcrypt)
-- Role-based access control (Admin, Landlord, Tenant, Provider)
-- Complex data modeling (listings, bookings, stays, payments, moderation)
-- State management across frontend and backend
+The repository models the core marketplace domains:
 
-### Infrastructure & Operations
+- Users with distinct Admin, Landlord, Tenant, and Provider roles
+- Property and listing lifecycle workflows
+- Bookings and stays, including availability and cancellation behavior
+- Payments, webhooks, reconciliation, and a transaction ledger/wallet model
+- Notifications, reviews, reports, disputes, and moderation workflows
 
-- Containerized deployment (Docker + Docker Compose)
-- Reverse proxy configuration (Nginx)
-- Database migrations and versioning (Prisma)
-- Object storage integration (S3/MinIO)
-- Background worker systems (notifications, backups)
-- Environment-based configuration
+These are implemented capabilities visible in the backend controllers, routes, Prisma schema, and frontend application. No user counts, transaction volumes, revenue, or adoption outcomes are claimed.
 
-### Integration & Payments
-
-- Multiple payment gateway integration (Paynow, Stripe)
-- Webhook handling (payment reconciliation)
-- Payment abstraction layer (pluggable providers)
-- Transaction ledger and wallet system
-
-### Reliability & Testing
-
-- Unit tests (15+ test files)
-- Integration tests (controller tests)
-- End-to-end tests (E2E test suite)
-- Database backup automation
-- Error handling and validation
-
-### Knowledge Systems
-
-- Comprehensive technical documentation (TownRuins-Docs)
-- Operational runbooks and procedures (TownRuins-Operations)
-- Architecture decision records
-- Deployment procedures
-- Environment configuration reference
-
-## Technology Stack (Verified)
+## System layer
 
 ### Frontend
 
-- **React** 18.2.0 — UI framework with hooks
-- **TypeScript** — Type-safe JavaScript
-- **Material UI** 5.14.18 — Component library
-- **Redux Toolkit** — State management
-- **Axios** — HTTP client
+The frontend is a React and TypeScript application using Material UI, Redux Toolkit, and Axios. Its package manifest and `frontend/src/` tree are the evidence for this layer.
 
-### Backend
+### Backend and APIs
 
-- **Node.js** — JavaScript runtime
-- **Express** 4.18.2 — Web framework
-- **Prisma** 5.0.0 — ORM and database client
-- **bcryptjs** — Password hashing
-- **jsonwebtoken** — JWT authentication
+The backend is a Node.js/Express application. Controllers and routes cover authentication, listings, bookings, stays, payments, uploads, notifications, providers, reviews, reports, disputes, moderation, and webhooks. The API documentation describes the public domain groupings and request/response surfaces.
 
-### Database
+### Data and state
 
-- **PostgreSQL** 16 — Relational database
-- **Prisma migrations** — Schema versioning
+Prisma connects the application to PostgreSQL 16. The schema and migration history provide evidence for relational data modeling and versioned database changes. Application workflows use explicit status fields and transactional operations where the code requires state integrity.
 
-### Infrastructure
+### Authentication and authorization
 
-- **Docker** + **Docker Compose** — Containerization and orchestration
-- **Nginx** — Reverse proxy
-- **MinIO** — S3-compatible object storage
-- **AWS SDK** — S3 integration
+The backend implements JWT authentication, password hashing with bcryptjs, role-aware routes, and ownership checks for provider, landlord, tenant, and administrative operations. These claims are grounded in `authController.js`, route middleware, and the relevant controllers.
 
 ### Integrations
 
-- **Paynow** — Zimbabwean payment gateway
-- **Stripe** — International payments
-- **Africa Talking** — SMS and email notifications
+The code includes Paynow and Stripe payment providers, webhook handling, AWS S3-compatible storage through the AWS SDK, MinIO configuration for local object storage, and Africa's Talking notification integration. The repository also contains notification workers and supporting email/SMS channel code.
 
-## Architecture Overview
+## Engineering layer
 
-```
-Frontend (React + TypeScript)
-    ↓ REST API
-Backend (Express + Prisma)
-    ↓ SQL
-PostgreSQL Database
-    ↓
-Background Workers (Notifications, Backups)
-    ↓
-External Services (Payment gateways, SMS/Email)
-```
+### Architecture
 
-**Key Services:**
+The project is organized as separate frontend and backend applications connected through REST APIs. The backend coordinates domain workflows, Prisma persistence, external payment/storage services, and asynchronous notifications. The architecture documentation records these boundaries and the API documentation records the main consumer-facing surfaces.
 
-- Authentication service (JWT flow)
-- Listing and booking engine
-- Payment processing (Paynow + Stripe)
-- Notification system (email, SMS)
-- Moderation and admin tools
-- File upload handling (S3/MinIO)
+### Background processing
 
-## Role and Responsibilities
+Notification work is queued through a notification service and processed by a worker. The backend also contains scheduled/operational scripts for tasks such as backups and reconciliation. These claims describe code and configuration present in the repository, not an uptime guarantee.
 
-**Application Development:** Implemented frontend UI, backend routes, database schema, business logic for listings, bookings, and payments.
+### Testing and validation
 
-**Infrastructure:** Configured Docker containers, Nginx reverse proxy, environment management, deployment targets.
+The backend includes unit and integration tests, and the repository contains end-to-end test material. Validation and error-handling middleware are part of the application request path.
 
-**Operations:** Designed backup system, notification workers, payment reconciliation, admin moderation interface.
+## Infrastructure
 
-**Documentation:** Established canonical architecture documentation and operational runbooks.
+The repository contains Dockerfiles and a Docker Compose configuration for PostgreSQL, MinIO, backend, frontend, and Nginx services. Nginx provides the reverse-proxy layer. Environment files and deployment manifests show configuration for different deployment contexts; they do not by themselves prove a currently running public environment.
 
-## Evidence and Artifacts
+Linux and cloud infrastructure are part of the supplied professional background and project deployment context. This portfolio does not claim a specific AWS topology, region, availability target, or managed database service beyond the AWS SDK/S3 integration evidenced in the code.
 
-The project source and documentation are available in these verified repositories:
+## Decisions and lessons
 
-- **[Source code](https://github.com/hwevaproduction-debug/towruins):** frontend, backend, Prisma schema and migrations, Docker Compose configuration, and tests
-- **[Project documentation](https://github.com/hwevaproduction-debug/TownRuins-Docs):** architecture, API, database, deployment, and operations documentation
-- **[Operations knowledge system](https://github.com/hwevaproduction-debug/TownRuins-Operations):** runbooks, procedures, and Quartz knowledge content
+The repository demonstrates implementation decisions, but it does not consistently preserve the original reasoning behind every decision. The defensible conclusions are therefore limited:
 
-## Evidence Level
+- **Problem:** A multi-domain marketplace needs boundaries between UI, API, persistence, and external services.
+  **Implementation:** Separate React frontend, Express backend, Prisma/PostgreSQL data layer, and integration modules.
+  **Consequence:** Each layer can be inspected and deployed as a distinct part of the system.
 
-**Working** — Implemented with deployment configuration, operational documentation, and supporting test and infrastructure artifacts.
+- **Problem:** Payment providers and asynchronous notifications have different failure modes.
+  **Implementation:** Provider abstractions, webhook handlers, reconciliation logic, and a notification worker.
+  **Consequence:** Payment and notification behavior is represented as explicit application workflows rather than only UI actions.
 
-The repository evidence supports the implementation and deployment-related configuration described here. It does not establish a publicly verifiable live production environment.
+- **Problem:** Deployment needs repeatable local service composition.
+  **Implementation:** Docker Compose definitions for database, object storage, applications, and Nginx.
+  **Consequence:** The repository contains a reproducible infrastructure description without claiming a live deployment outcome.
 
-## Learn More
+These are implementation observations, not reconstructed motivations where the source does not record them.
 
-- **[Architecture documentation](https://github.com/hwevaproduction-debug/TownRuins-Docs):** architecture, API, database, deployment, and operations materials
-- **[Operations knowledge system](https://github.com/hwevaproduction-debug/TownRuins-Operations):** operational procedures and supporting knowledge content
-- **[Source code](https://github.com/hwevaproduction-debug/towruins):** application implementation and configuration
+## Evidence
+
+- [Source repository](https://github.com/hwevaproduction-debug/towruins): frontend, backend, schema, migrations, tests, and deployment configuration
+- [Architecture and API documentation](https://github.com/hwevaproduction-debug/TownRuins-Docs): system boundaries, API domains, database, deployment, and operations references
+- [Operations knowledge system](https://github.com/hwevaproduction-debug/TownRuins-Operations): runbooks, procedures, and operational documentation
+
+Useful repository artifacts include `backend/app.js`, `backend/controllers/`, `backend/prisma/schema.prisma`, `backend/utils/notificationWorker.js`, `backend/utils/paymentProvider.js`, `docker-compose.yml`, `frontend/package.json`, and `backend/tests/`.
+
+## Evidence level
+
+**Working** — The available artifacts establish substantial implemented software and infrastructure experience. They do not establish a publicly verifiable live production environment, user adoption, or operational metrics.

@@ -1,16 +1,19 @@
 # Research / Thinking
 
-This section is reserved for technical essays, decision logs, and explorations in systems engineering.
+This section contains technical interests and working notes rather than claims of published research.
 
-Topics of interest include:
+## Current areas of development
 
-- Software architecture and design patterns
-- SDLC as a friction-management system
-- State-driven systems and their design
-- Knowledge systems and documentation
-- Infrastructure and deployment patterns
-- Operational thinking
+- **Systems thinking:** how state, resources, boundaries, and failure shape software behavior
+- **Distributed systems:** consistency, replication, queues, retries, idempotency, and service coordination
+- **Cloud and infrastructure:** Linux, containers, deployment configuration, networking, and operational constraints
+- **AI systems:** inference, model selection, agents, tool use, memory, routing, and orchestration
+- **Knowledge systems:** durable documentation, decision records, and evidence-linked engineering communication
 
-Currently, this section contains notes and observations rather than finished essays. As technical thinking crystallizes into durable form, it will be added here.
+These topics describe active development and questions being explored. They should not be read as established professional specialization.
 
-The philosophy of this space is the same as the portfolio itself: **knowledge-first, evidence-backed, progressive disclosure**.
+## Connection to implemented work
+
+Town Ruins provides concrete material for studying these questions: authentication and authorization, relational persistence, background processing, payment integration, containerized services, reverse-proxy configuration, and operational documentation.
+
+The portfolio itself is a smaller implementation exercise in state-driven interaction, progressive disclosure, and content that remains readable outside the interface.

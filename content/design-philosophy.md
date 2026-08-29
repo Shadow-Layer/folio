@@ -50,7 +50,7 @@ Durable content (Markdown files) is the primary source of truth. The interface i
 
 **How it's implemented:**
 
-- All content lives in `/content/*.md` files
+- All durable content lives in Markdown files under `/content/`
 - A single manifest (`manifest.json`) indexes available content
 - The JavaScript reads content on demand and renders it
 - If the interface disappeared, the Markdown files would still be valid knowledge
@@ -110,7 +110,7 @@ If evidence is unavailable: Do not claim it.
 - No metrics, dates, or outcomes that cannot be verified
 - No invented organizational structure
 - No fabricated accomplishments
-- If a technology is mentioned, it appears in actual project code
+- Implemented technology claims are tied to project artifacts where available
 
 ## 6. Interaction as navigation
 

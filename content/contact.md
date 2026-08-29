@@ -1,5 +1,8 @@
 # Contact
 
-This portfolio does not currently provide a public contact endpoint.
+Public contact information is available through:
 
-It documents professional work and technical approach, but includes no email address, profile link, or other direct contact method.
+- **Portfolio:** [iam-alvinphiri.netlify.app](https://iam-alvinphiri.netlify.app/)
+- **Email:** aphiri1658@gmail.com
+
+The portfolio and email address are taken from the supplied professional profile source. No other contact endpoint is asserted here.
