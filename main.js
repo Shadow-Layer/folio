@@ -2,7 +2,6 @@
 
 const el = (id) => document.getElementById(id);
 const stage = el('stage');
-const btnOpen = el('btn-open');
 
 let manifest = null;
 let contentCache = {};
@@ -154,7 +153,32 @@ function mdToHtml(md) {
   return out;
 }
 
-// Format text with **bold** while preserving HTML safety
+// Render only valid HTTPS Markdown links while preserving HTML safety.
+function formatLinks(text) {
+  const linkPattern = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
+  let html = '';
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkPattern.exec(text))) {
+    html += sanitize(text.slice(lastIndex, match.index));
+
+    try {
+      const url = new URL(match[2]);
+      if (url.protocol !== 'https:') throw new Error('Unsupported link protocol');
+      html += '<a href="' + url.href + '" target="_blank" rel="noopener noreferrer">' +
+        sanitize(match[1]) + '</a>';
+    } catch (e) {
+      html += sanitize(match[0]);
+    }
+
+    lastIndex = linkPattern.lastIndex;
+  }
+
+  return html + sanitize(text.slice(lastIndex));
+}
+
+// Format text with **bold** and HTTPS links while preserving HTML safety
 function sanitizeAndFormat(text) {
   // Split on ** patterns, capturing the bold sections
   const parts = text.split(/(\*\*[^*]+\*\*)/);
@@ -164,14 +188,10 @@ function sanitizeAndFormat(text) {
     if (part.startsWith('**') && part.endsWith('**')) {
       // Bold section
       const content = part.slice(2, -2);
-      const div = document.createElement('div');
-      div.textContent = content;
-      html += '<strong>' + div.innerHTML + '</strong>';
+      html += '<strong>' + formatLinks(content) + '</strong>';
     } else if (part) {
       // Regular text
-      const div = document.createElement('div');
-      div.textContent = part;
-      html += div.innerHTML;
+      html += formatLinks(part);
     }
   }
   
@@ -292,9 +312,11 @@ async function showProjectsList() {
 async function openContent(path) {
   if (!path) return;
 
+  const isCurrentSelection = () => state.view === 'content' && state.selected === path;
+
   // Check cache first
   if (contentCache[path]) {
-    displayContent(contentCache[path]);
+    if (isCurrentSelection()) displayContent(contentCache[path]);
     return;
   }
 
@@ -303,8 +325,9 @@ async function openContent(path) {
     if (!res.ok) throw new Error('Not found');
     const md = await res.text();
     contentCache[path] = md; // Cache
-    displayContent(md);
+    if (isCurrentSelection()) displayContent(md);
   } catch (e) {
+    if (!isCurrentSelection()) return;
     stage.innerHTML = '<p class="muted">Content could not be loaded.</p>';
     const back = document.createElement('button');
     back.textContent = 'Back';
@@ -329,15 +352,12 @@ function displayContent(md) {
   stage.appendChild(div);
 }
 
-// Initial button listener
-btnOpen.addEventListener('click', async () => {
-  await loadManifest();
-  setState({ view: 'topics' });
-});
-
 // Escape key resets to initial
 stage.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     setState({ view: 'initial' });
   }
 });
+
+// Render the declared initial state instead of relying on static fallback markup.
+render();

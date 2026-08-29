@@ -1,10 +1,5 @@
 # Contact
 
-You can reach Tea through:
+This portfolio does not currently provide a public contact endpoint.
 
-- **GitHub:** Search for Tea's repositories (Town Ruins, TownRuins-Docs, TownRuins-Operations)
-- **LinkedIn:** Professional profile and project experience
-
-Detailed contact methods available upon request.
-
-This portfolio itself is a demonstration of professional work and thinking. The source code and documentation repositories (particularly TownRuins-Docs and TownRuins-Operations) represent the most complete picture of capability and approach.
+It documents professional work and technical approach, but includes no email address, profile link, or other direct contact method.

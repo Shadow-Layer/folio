@@ -77,7 +77,7 @@ Users discover depth through interaction:
 1. **Initial:** Identity card + "Explore" button
 2. **Topics:** Menu of areas (About, Projects, Philosophy, Research, Contact)
 3. **Content:** Individual topic or project detail
-4. **Deeper:** Links to external knowledge systems and evidence
+4. **Deeper:** Verified project documentation and evidence, where available
 
 Each layer is optional. Casual visitors see identity and projects. Technical visitors access depth.
 
@@ -145,8 +145,8 @@ No separate mobile framework or architecture. Single responsive design.
 ## Performance Characteristics
 
 - **Initial load:** Single HTML file + CSS + JavaScript
-- **First interaction:** Manifest loads (6 KB JSON)
-- **Content requests:** Individual Markdown files (~1-10 KB each)
+- **First interaction:** Manifest loads once
+- **Content requests:** Individual Markdown files load on demand
 - **Memory usage:** Manifest + selected content cached
 - **Idle state:** No background work, no polling, no continuous rendering
 

@@ -1,6 +1,6 @@
 # Town Ruins
 
-Town Ruins is a production-grade real-estate marketplace platform. It is the primary evidence of systems engineering capability.
+Town Ruins is a real-estate marketplace platform. It is the primary evidence of systems engineering capability.
 
 ## What It Is
 
@@ -69,7 +69,7 @@ A rental housing marketplace built with React, Node.js, PostgreSQL, and Docker. 
 ### Database
 
 - **PostgreSQL** 16 — Relational database
-- **Prisma migrations** — Schema versioning (50+ migrations)
+- **Prisma migrations** — Schema versioning
 
 ### Infrastructure
 
@@ -119,27 +119,20 @@ External Services (Payment gateways, SMS/Email)
 
 ## Evidence and Artifacts
 
-All technical claims above are verifiable in:
+The project source and documentation are available in these verified repositories:
 
-- **Repository:** `/mnt/c/Users/dell/Documents/GitHub/towruins/`
-- **Frontend source:** `frontend/src/` (React + TypeScript)
-- **Backend source:** `backend/` (Express server)
-- **Database:** `backend/prisma/schema.prisma` (50+ migrations)
-- **Deployment:** `docker-compose.yml` (full multi-service setup)
-- **Documentation:** `/TownRuins-Docs/` (architecture, API, operations)
-- **Operations:** `/TownRuins-Operations/` (runbooks, procedures, Quartz knowledge system)
-- **Tests:** `backend/tests/` (unit, integration, E2E)
+- **[Source code](https://github.com/hwevaproduction-debug/towruins):** frontend, backend, Prisma schema and migrations, Docker Compose configuration, and tests
+- **[Project documentation](https://github.com/hwevaproduction-debug/TownRuins-Docs):** architecture, API, database, deployment, and operations documentation
+- **[Operations knowledge system](https://github.com/hwevaproduction-debug/TownRuins-Operations):** runbooks, procedures, and Quartz knowledge content
 
 ## Evidence Level
 
-**Proven** — Built, deployed, and operational in production.
+**Working** — Implemented with deployment configuration, operational documentation, and supporting test and infrastructure artifacts.
 
-This is not speculative. Every claim in this document is supported by actual repository artifacts, deployed code, and comprehensive documentation.
+The repository evidence supports the implementation and deployment-related configuration described here. It does not establish a publicly verifiable live production environment.
 
 ## Learn More
 
-- **Architecture:** See `/TownRuins-Docs/architecture/ARCHITECTURE.md`
-- **API Reference:** See `/TownRuins-Docs/api/API.md`
-- **Database Design:** See `/TownRuins-Docs/database/`
-- **Operations:** See `/TownRuins-Operations/docs/operations/`
-- **Source Code:** Visit `/towruins/` repository
+- **[Architecture documentation](https://github.com/hwevaproduction-debug/TownRuins-Docs):** architecture, API, database, deployment, and operations materials
+- **[Operations knowledge system](https://github.com/hwevaproduction-debug/TownRuins-Operations):** operational procedures and supporting knowledge content
+- **[Source code](https://github.com/hwevaproduction-debug/towruins):** application implementation and configuration

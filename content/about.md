@@ -11,7 +11,7 @@ The work featured in this portfolio demonstrates proficiency in:
 - **Operations** (notifications, background workers, moderation)
 - **Documentation** (technical writing, architecture records, runbooks)
 
-The primary evidence is **Town Ruins**, a production rental marketplace that demonstrates all of these capabilities in an integrated system.
+The primary evidence is **Town Ruins**, a rental marketplace that demonstrates all of these capabilities in an integrated system.
 
 This portfolio applies the philosophy it describes: knowledge-first architecture, state-driven interfaces, progressive disclosure, and evidence-backed claims.
 

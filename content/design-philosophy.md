@@ -38,7 +38,7 @@ Reveal complexity progressively as the visitor's intent becomes more specific.
 - First interaction: Topics menu (About, Projects, Philosophy, Research, Contact)
 - Second interaction: Topic content or project list
 - Third interaction: Individual project details
-- Deeper: Evidence, architecture, links to external knowledge systems
+- Deeper: Evidence, architecture, and verified external project documentation where available
 
 Technical users can access depth. Casual visitors can understand identity and projects without technical detail.
 
@@ -105,8 +105,8 @@ If evidence is unavailable: Do not claim it.
 
 **How it's implemented:**
 
-- Every technology claim links to repository evidence
-- Projects reference actual artifacts (GitHub, docs, deployed systems)
+- Technology claims are grounded in project artifacts; public links are included only when verified
+- Projects reference actual artifacts (source repositories and documentation)
 - No metrics, dates, or outcomes that cannot be verified
 - No invented organizational structure
 - No fabricated accomplishments

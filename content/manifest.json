@@ -2,7 +2,7 @@
   "items": [
     { "path": "about.md", "title": "About / Identity", "summary": "Systems-oriented software engineer. Full-stack development, infrastructure, operations." },
     { "path": "design-philosophy.md", "title": "Design Philosophy", "summary": "Seven principles: state-driven execution, progressive disclosure, knowledge-first, resource-aware, evidence-first, interaction as navigation, complexity containment." },
-    { "path": "projects/town-ruins.md", "title": "Town Ruins", "summary": "Production rental marketplace. React, Node.js, PostgreSQL, Docker, payments, notifications, operations." },
+    { "path": "projects/town-ruins.md", "title": "Town Ruins", "summary": "Rental marketplace. React, Node.js, PostgreSQL, Docker, payments, notifications, operations." },
     { "path": "projects/portfolio.md", "title": "Portfolio (this project)", "summary": "This portfolio as self-describing system. Knowledge-first, state-driven, framework-free implementation of the design philosophy." },
     { "path": "research.md", "title": "Research / Thinking", "summary": "Technical essays and decision logs. Systems thinking, architecture, knowledge systems, operations." },
     { "path": "contact.md", "title": "Contact", "summary": "Contact methods." }
