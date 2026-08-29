@@ -215,3 +215,68 @@ Add a minimal, content-first, framework-free portfolio skeleton with progressive
 | Branch         | main               |
 | Commit(s)      | d3fccda            |
 | Generated From | git diff + git log |
+
+---
+
+## 2908
+
+### 0711
+
+| Field      | Value                                   |
+| ---------- | --------------------------------------- |
+| Author     | Tea                                     |
+| Identifier | 0711                                    |
+| Date       | 2908                                    |
+| Year       | 26                                      |
+| Type       | Fix                                     |
+| Status     | ✅ Verified                              |
+| Validation | Passed                                  |
+| Scope      | Phase 4 acceptance repairs              |
+
+#### Summary
+
+Repaired the four acceptance blockers: initial state rendering now starts from the declared state, stale asynchronous content results are ignored, evidence claims and references were corrected, and the contact section now states the absence of a public endpoint honestly.
+
+#### Files Changed
+
+| Action   | File      |
+| -------- | --------- |
+| Modified | index.html |
+| Modified | main.js |
+| Modified | content/about.md |
+| Modified | content/contact.md |
+| Modified | content/design-philosophy.md |
+| Modified | content/manifest.json |
+| Modified | content/projects/portfolio.md |
+| Modified | content/projects/town-ruins.md |
+
+#### Detailed Changes
+
+| Category      | Description |
+| ------------- | ----------- |
+| Initial state | Removed contradictory static fallback content and invoked the existing renderer for the declared initial state. |
+| Async state  | Added a current-view/current-selection check before cached, successful, or failed content fetches update the DOM. |
+| Evidence     | Removed unsupported production and migration-count claims, corrected evidence paths, and added only verified public repository links with safe HTTPS Markdown rendering. |
+| Contact      | Replaced non-actionable GitHub/LinkedIn search text with an explicit statement that no public endpoint is supplied. |
+
+#### Validation Results
+
+| Check                  | Result |
+| ---------------------- | ------ |
+| JavaScript syntax      | ✅      |
+| JSON validity          | ✅      |
+| Manifest paths         | ✅ All 6 resolve |
+| Migration evidence     | ✅ 21 directories; no 50+ claim |
+| Production claim       | ✅ Downgraded to Working |
+| Evidence URLs          | ✅ Three verified public repositories |
+| Contact endpoint       | ✅ No fabricated endpoint; limitation stated |
+| Polling/timers/observers | ✅ None introduced |
+| Diff whitespace        | ✅      |
+
+#### Git
+
+| Field          | Value              |
+| -------------- | ------------------ |
+| Branch         | main               |
+| Commit(s)      | 25b7084            |
+| Generated From | git status + git diff |
