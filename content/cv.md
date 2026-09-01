@@ -11,8 +11,8 @@ Full-stack development, cloud and systems.
 - +263 785 865 565
 - aphiri1658@gmail.com
 - Zimbabwe
-- [iam-alvinphiri.netlify.app](https://iam-alvinphiri.netlify.app)
-- [GitHub: hwevaproduction-debug](https://github.com/hwevaproduction-debug)
+- [alvinphiri.online](https://alvinphiri.online)
+- [GitHub: donnie-alvin](https://github.com/donnie-alvin)
 
 ## Professional Summary
 
