@@ -6,12 +6,17 @@ const stage = el('stage');
 let manifest = null;
 let contentCache = {};
 let state = { view: 'initial', selected: null };
+const contentBase = new URL('./content/', import.meta.url);
+
+function contentUrl(path) {
+  return new URL(path, contentBase).href;
+}
 
 // Load manifest once, cache content
 async function loadManifest() {
   if (manifest) return manifest;
   try {
-    const res = await fetch('/content/manifest.json');
+    const res = await fetch(contentUrl('manifest.json'));
     manifest = await res.json();
     return manifest;
   } catch (e) {
@@ -24,6 +29,15 @@ async function loadManifest() {
 function setState(next) {
   state = Object.assign({}, state, next);
   render();
+}
+
+function setStageBusy(isBusy) {
+  stage.setAttribute('aria-busy', String(isBusy));
+}
+
+function focusStage({ resetScroll = false } = {}) {
+  if (resetScroll) stage.scrollIntoView({ block: 'start', behavior: 'auto' });
+  stage.focus({ preventScroll: !resetScroll });
 }
 
 // Render based on state
@@ -46,17 +60,20 @@ function render() {
 
 // Initial state
 function renderInitial() {
+  setStageBusy(false);
   stage.innerHTML = '';
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `
-    <h2>Portfolio</h2>
-    <p class="muted">A state-driven, progressively revealing knowledge interface.</p>
+  const opening = document.createElement('section');
+  opening.className = 'opening';
+  opening.innerHTML = `
+    <p class="kicker">Personal knowledge archive <span aria-hidden="true">—</span> 01</p>
+    <h1>Alvin Phiri</h1>
+    <p class="role">Software Engineer</p>
+    <p class="opening-summary">I build full-stack systems across application and infrastructure layers.</p>
     <div class="actions">
-      <button id="btn-explore">Explore</button>
+      <button id="btn-explore" class="action-link" type="button">Explore the archive <span aria-hidden="true">→</span></button>
     </div>
   `;
-  stage.appendChild(card);
+  stage.appendChild(opening);
   document.getElementById('btn-explore').addEventListener('click', async () => {
     await loadManifest();
     setState({ view: 'topics' });
@@ -153,9 +170,11 @@ function mdToHtml(md) {
   return out;
 }
 
-// Render only valid HTTPS Markdown links while preserving HTML safety.
+// Render safe Markdown links while preserving HTML safety. Relative links are
+// resolved from the repository's content root so documents can point to local
+// static assets (for example, the downloadable CV PDF).
 function formatLinks(text) {
-  const linkPattern = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
+  const linkPattern = /\[([^\]]+)\]\(([^\s)]+)\)/g;
   let html = '';
   let lastIndex = 0;
   let match;
@@ -164,9 +183,11 @@ function formatLinks(text) {
     html += sanitize(text.slice(lastIndex, match.index));
 
     try {
-      const url = new URL(match[2]);
-      if (url.protocol !== 'https:') throw new Error('Unsupported link protocol');
-      html += '<a href="' + url.href + '" target="_blank" rel="noopener noreferrer">' +
+      const url = new URL(match[2], contentBase);
+      if (!['https:', 'http:'].includes(url.protocol)) throw new Error('Unsupported link protocol');
+      const external = url.origin !== window.location.origin;
+      html += '<a href="' + sanitize(url.href) + '"' +
+        (external ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' +
         sanitize(match[1]) + '</a>';
     } catch (e) {
       html += sanitize(match[0]);
@@ -178,8 +199,26 @@ function formatLinks(text) {
   return html + sanitize(text.slice(lastIndex));
 }
 
+// Render local Markdown images as lazy, semantic evidence. Image URLs are
+// resolved from the content root and never fetched until their document opens.
+function formatImages(text) {
+  return text.replace(/!\[([^\]]*)\]\(([^\s)]+)\)/g, (whole, alt, path) => {
+    try {
+      const url = new URL(path, contentBase);
+      if (url.origin !== window.location.origin || !/^\.(?:png|jpe?g|webp|gif)$/i.test(url.pathname.slice(url.pathname.lastIndexOf('.')))) {
+        return sanitize(whole);
+      }
+      return '<img class="document-image" src="' + sanitize(url.href) + '" alt="' + sanitize(alt) + '" loading="lazy">';
+    } catch (e) {
+      return sanitize(whole);
+    }
+  });
+}
+
 // Format text with **bold** and HTTPS links while preserving HTML safety
 function sanitizeAndFormat(text) {
+  const imageParts = formatImages(text);
+  if (imageParts !== text) return imageParts;
   // Split on ** patterns, capturing the bold sections
   const parts = text.split(/(\*\*[^*]+\*\*)/);
   let html = '';
@@ -201,29 +240,51 @@ function sanitizeAndFormat(text) {
 // Show topics menu
 async function showTopics() {
   const data = await loadManifest();
+  if (state.view !== 'topics') return;
+  setStageBusy(false);
   const topics = [
     { id: 'about', title: 'About / Identity', file: 'about.md' },
     { id: 'projects', title: 'Projects', file: null },
     { id: 'philosophy', title: 'Design Philosophy', file: 'design-philosophy.md' },
     { id: 'research', title: 'Research / Thinking', file: 'research.md' },
+    { id: 'cv', title: 'CV', file: 'cv.md' },
     { id: 'contact', title: 'Contact', file: 'contact.md' }
   ];
 
   stage.innerHTML = '';
+  const view = document.createElement('section');
+  view.className = 'archive-view topics-view';
+  view.innerHTML = `
+    <header class="view-heading">
+      <p class="kicker">Archive index <span aria-hidden="true">—</span> 02</p>
+      <h1>Choose a thread.</h1>
+      <p>Each entry opens a different part of the work.</p>
+    </header>
+  `;
   const list = document.createElement('div');
-  list.className = 'list';
+  list.className = 'archive-list';
 
-  for (const t of topics) {
-    const d = document.createElement('div');
-    d.className = 'item';
-    d.tabIndex = 0;
+  for (const [index, t] of topics.entries()) {
+    const d = document.createElement('button');
+    d.className = 'archive-entry';
+    d.type = 'button';
+    d.setAttribute('aria-label', `Open ${t.title}`);
 
-    const h = document.createElement('h3');
+    const number = document.createElement('span');
+    number.className = 'entry-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+    number.setAttribute('aria-hidden', 'true');
+    d.appendChild(number);
+
+    const copy = document.createElement('span');
+    copy.className = 'entry-copy';
+    const h = document.createElement('span');
+    h.className = 'entry-title';
     h.textContent = t.title;
-    d.appendChild(h);
+    copy.appendChild(h);
 
-    const p = document.createElement('p');
-    p.className = 'muted';
+    const p = document.createElement('span');
+    p.className = 'entry-summary';
 
     if (t.file) {
       const item = data.items.find(i => i.path === t.file);
@@ -232,7 +293,14 @@ async function showTopics() {
       p.textContent = 'Explore projects';
     }
 
-    d.appendChild(p);
+    copy.appendChild(p);
+    d.appendChild(copy);
+
+    const arrow = document.createElement('span');
+    arrow.className = 'entry-arrow';
+    arrow.textContent = '→';
+    arrow.setAttribute('aria-hidden', 'true');
+    d.appendChild(arrow);
 
     d.addEventListener('click', () => {
       if (t.id === 'projects') {
@@ -242,70 +310,95 @@ async function showTopics() {
       }
     });
 
-    d.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') d.click();
-    });
-
     list.appendChild(d);
   }
 
-  stage.appendChild(list);
+  view.appendChild(list);
+  stage.appendChild(view);
+  focusStage();
 }
 
 // Show projects list
 async function showProjectsList() {
   const data = await loadManifest();
-  const projects = data.items.filter(i => i.path.startsWith('projects/'));
+  if (state.view !== 'projects') return;
+  setStageBusy(false);
+  const projects = data.items.filter(i => i.path.startsWith('projects/') && !i.parent);
 
   stage.innerHTML = '';
-  const wrap = document.createElement('div');
-  wrap.className = 'content';
+  const wrap = document.createElement('section');
+  wrap.className = 'archive-view projects-view';
+  wrap.innerHTML = `
+    <header class="view-heading">
+      <p class="kicker">Engineering evidence <span aria-hidden="true">—</span> 03</p>
+      <h1>Projects, examined.</h1>
+      <p>Open a record to move from the surface into its supporting material.</p>
+    </header>
+  `;
 
   if (projects.length === 0) {
-    wrap.innerHTML = '<p class="muted">No projects found.</p>';
+    wrap.insertAdjacentHTML('beforeend', '<p class="empty-state">No project records are available.</p>');
     const back = document.createElement('button');
-    back.textContent = 'Back';
+    back.type = 'button';
+    back.className = 'return-link';
+    back.innerHTML = '<span aria-hidden="true">←</span> Return to index';
     back.addEventListener('click', () => setState({ view: 'topics' }));
     wrap.appendChild(back);
     stage.appendChild(wrap);
+    focusStage();
     return;
   }
 
   const list = document.createElement('div');
-  list.className = 'list';
+  list.className = 'archive-list project-list';
 
-  for (const p of projects) {
-    const d = document.createElement('div');
-    d.className = 'item';
-    d.tabIndex = 0;
+  for (const [index, p] of projects.entries()) {
+    const d = document.createElement('button');
+    d.className = 'archive-entry';
+    d.type = 'button';
+    d.setAttribute('aria-label', `Open ${p.title || 'project record'}`);
 
-    const h = document.createElement('h3');
+    const number = document.createElement('span');
+    number.className = 'entry-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+    number.setAttribute('aria-hidden', 'true');
+    d.appendChild(number);
+
+    const copy = document.createElement('span');
+    copy.className = 'entry-copy';
+    const h = document.createElement('span');
+    h.className = 'entry-title';
     h.textContent = p.title || p.path.replace(/^projects\//, '').replace('.md', '');
-    d.appendChild(h);
+    copy.appendChild(h);
 
-    const pmuted = document.createElement('p');
-    pmuted.className = 'muted';
+    const pmuted = document.createElement('span');
+    pmuted.className = 'entry-summary';
     pmuted.textContent = p.summary || '';
-    d.appendChild(pmuted);
+    copy.appendChild(pmuted);
+    d.appendChild(copy);
+
+    const arrow = document.createElement('span');
+    arrow.className = 'entry-arrow';
+    arrow.textContent = '→';
+    arrow.setAttribute('aria-hidden', 'true');
+    d.appendChild(arrow);
 
     d.addEventListener('click', () => {
       setState({ view: 'content', selected: p.path });
     });
 
-    d.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') d.click();
-    });
-
     list.appendChild(d);
   }
 
-  stage.appendChild(list);
-
   const back = document.createElement('button');
-  back.textContent = 'Back';
-  back.className = 'back-button';
+  back.type = 'button';
+  back.innerHTML = '<span aria-hidden="true">←</span> Return to index';
+  back.className = 'return-link';
   back.addEventListener('click', () => setState({ view: 'topics' }));
-  stage.appendChild(back);
+  wrap.appendChild(list);
+  wrap.appendChild(back);
+  stage.appendChild(wrap);
+  focusStage();
 }
 
 // Load and display content
@@ -316,40 +409,116 @@ async function openContent(path) {
 
   // Check cache first
   if (contentCache[path]) {
-    if (isCurrentSelection()) displayContent(contentCache[path]);
+    if (isCurrentSelection()) displayContent(contentCache[path], path);
     return;
   }
 
+  setStageBusy(true);
+  stage.innerHTML = '<div class="loading-state"><p class="kicker">Opening record</p><p>Reading from the archive…</p></div>';
+
   try {
-    const res = await fetch('/content/' + path);
+    const res = await fetch(contentUrl(path));
     if (!res.ok) throw new Error('Not found');
     const md = await res.text();
     contentCache[path] = md; // Cache
-    if (isCurrentSelection()) displayContent(md);
+    if (isCurrentSelection()) displayContent(md, path);
   } catch (e) {
     if (!isCurrentSelection()) return;
-    stage.innerHTML = '<p class="muted">Content could not be loaded.</p>';
+    setStageBusy(false);
+    stage.innerHTML = '<div class="loading-state"><p class="kicker">Record unavailable</p><p>Content could not be loaded.</p></div>';
     const back = document.createElement('button');
-    back.textContent = 'Back';
-    back.addEventListener('click', () => setState({ view: 'topics' }));
+    back.type = 'button';
+    back.className = 'return-link';
+    back.innerHTML = '<span aria-hidden="true">←</span> Return';
+    back.addEventListener('click', () => navigateBack(path));
     stage.appendChild(back);
+    focusStage({ resetScroll: true });
   }
 }
 
 // Display content with back button
-function displayContent(md) {
+function navigateBack(path) {
+  const item = manifest && manifest.items.find(i => i.path === path);
+  if (item && item.parent) {
+    setState({ view: 'content', selected: item.parent });
+  } else if (path && path.startsWith('projects/')) {
+    setState({ view: 'projects', selected: null });
+  } else {
+    setState({ view: 'topics', selected: null });
+  }
+}
+
+function displayContent(md, path) {
+  setStageBusy(false);
   stage.innerHTML = '';
-  const div = document.createElement('div');
-  div.className = 'card content';
+  const div = document.createElement('article');
+  div.className = 'document content';
   div.innerHTML = mdToHtml(md);
 
+  const record = manifest && manifest.items.find(item => item.path === path);
+  const title = div.querySelector('h1');
+  if (title) title.classList.add('document-title');
+  const meta = document.createElement('p');
+  meta.className = 'document-meta';
+  meta.textContent = record && record.parent ? 'Supporting record' : path.startsWith('projects/') ? 'Project record' : 'Archive note';
+  div.insertBefore(meta, div.firstChild);
+
+  const children = manifest ? manifest.items.filter(i => i.parent === path) : [];
+  if (children.length) {
+    const navHeading = document.createElement('h2');
+    navHeading.className = 'continue-heading';
+    navHeading.textContent = 'Continue into the record';
+    div.appendChild(navHeading);
+
+    const list = document.createElement('div');
+    list.className = 'archive-list child-list';
+    for (const [index, child] of children.entries()) {
+      const item = document.createElement('button');
+      item.className = 'archive-entry';
+      item.type = 'button';
+      item.setAttribute('aria-label', `Open ${child.title}`);
+
+      const number = document.createElement('span');
+      number.className = 'entry-number';
+      number.textContent = String(index + 1).padStart(2, '0');
+      number.setAttribute('aria-hidden', 'true');
+      item.appendChild(number);
+
+      const copy = document.createElement('span');
+      copy.className = 'entry-copy';
+      const title = document.createElement('span');
+      title.className = 'entry-title';
+      title.textContent = child.title;
+      copy.appendChild(title);
+
+      const summary = document.createElement('span');
+      summary.className = 'entry-summary';
+      summary.textContent = child.summary || 'Open to read';
+      copy.appendChild(summary);
+      item.appendChild(copy);
+
+      const arrow = document.createElement('span');
+      arrow.className = 'entry-arrow';
+      arrow.textContent = '→';
+      arrow.setAttribute('aria-hidden', 'true');
+      item.appendChild(arrow);
+
+      const open = () => setState({ view: 'content', selected: child.path });
+      item.addEventListener('click', open);
+      list.appendChild(item);
+    }
+    div.appendChild(list);
+  }
+
   const back = document.createElement('button');
-  back.textContent = 'Back';
-  back.className = 'back-button';
-  back.addEventListener('click', () => setState({ view: 'topics' }));
+  back.type = 'button';
+  back.className = 'return-link';
+  back.innerHTML = '<span aria-hidden="true">←</span> ' + (record && record.parent ? 'Return to parent record' : path.startsWith('projects/') ? 'Return to projects' : 'Return to index');
+  back.addEventListener('click', () => navigateBack(path));
   div.appendChild(back);
 
   stage.appendChild(div);
+  focusStage({ resetScroll: true });
 }
 
 // Escape key resets to initial

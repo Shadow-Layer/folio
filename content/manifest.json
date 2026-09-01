@@ -3,8 +3,14 @@
     { "path": "about.md", "title": "About / Identity", "summary": "Alvin Phiri — Software Engineer. Computer Science, full-stack systems, infrastructure, and systems thinking." },
     { "path": "design-philosophy.md", "title": "Design Philosophy", "summary": "Seven principles: state-driven execution, progressive disclosure, knowledge-first, resource-aware, evidence-first, interaction as navigation, complexity containment." },
     { "path": "projects/town-ruins.md", "title": "Town Ruins", "summary": "Full-stack rental marketplace case study: application, APIs, PostgreSQL, payments, workers, Docker, Nginx, and operations." },
+    { "path": "projects/town-ruins-system.md", "parent": "projects/town-ruins.md", "title": "System", "summary": "Frontend, backend, persistence, and service boundaries." },
+    { "path": "projects/town-ruins-backend.md", "parent": "projects/town-ruins-system.md", "title": "Backend", "summary": "Express APIs, domain controllers, persistence, and workflow boundaries." },
+    { "path": "projects/town-ruins-authentication.md", "parent": "projects/town-ruins-backend.md", "title": "Authentication and authorization", "summary": "JWT authentication, password hashing, role-aware routes, and ownership checks." },
+    { "path": "projects/town-ruins-infrastructure.md", "parent": "projects/town-ruins-system.md", "title": "Infrastructure and workers", "summary": "Docker Compose, Nginx, object storage, notifications, and operational scripts." },
+    { "path": "projects/town-ruins-evidence.md", "parent": "projects/town-ruins.md", "title": "Evidence", "summary": "Verified source repositories, documentation, and inspectable artifacts." },
     { "path": "projects/portfolio.md", "title": "Portfolio (this project)", "summary": "This portfolio as self-describing system. Knowledge-first, state-driven, framework-free implementation of the design philosophy." },
     { "path": "research.md", "title": "Research / Thinking", "summary": "Working notes on systems, distributed systems, cloud infrastructure, AI systems, and knowledge." },
+    { "path": "cv.md", "title": "CV", "summary": "A concise, evidence-safe record of Alvin Phiri's engineering experience, capabilities, and education." },
     { "path": "contact.md", "title": "Contact", "summary": "Verified portfolio and email contact." }
   ]
 }

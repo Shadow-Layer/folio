@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portfolio — State-driven Interface</title>
-  <link rel="stylesheet" href="/styles.css">
+  <title>Alvin Phiri — Knowledge Archive</title>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <header class="site-header">
-    <h1 id="site-title">Portfolio</h1>
-    <p class="muted">A state-driven, progressively revealing knowledge interface.</p>
+    <p id="site-title" class="site-mark">Alvin Phiri <span aria-hidden="true">/</span> Portfolio</p>
+    <p class="site-context">Engineering notes &amp; evidence</p>
   </header>
 
-  <main id="app" class="app" role="main">
-    <section id="stage" class="stage" tabindex="0" aria-live="polite"></section>
+  <main id="app" class="app">
+    <section id="stage" class="stage" tabindex="-1" aria-live="polite" aria-atomic="true"></section>
   </main>
 
   <footer class="site-footer">
-    <small>Built as a content-first, minimal portfolio interface.</small>
+    <small>Content-first. Read at your own pace.</small>
   </footer>
 
-  <script src="/main.js" type="module"></script>
+  <script src="./main.js" type="module"></script>
 </body>
 </html>

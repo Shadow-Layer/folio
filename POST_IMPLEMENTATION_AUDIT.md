@@ -39,7 +39,7 @@ REQUIREMENT-BY-REQUIREMENT MATRIX
 
 5) Every fetch/load path
    → PASS
-   → main.js uses fetch('/content/manifest.json') and fetch('/content/' + path). Manifest and content files exist at those paths.
+   → main.js resolves the manifest and Markdown resources with a module-relative content URL helper. Manifest and content files exist under /content for both root and subpath deployments.
 
 6) All navigation and links
    → PASS with notes
@@ -185,4 +185,3 @@ END OF AUDIT
 -----------
 
 Audit prepared by: Automated repository audit (assistant)
-

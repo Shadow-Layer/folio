@@ -1,0 +1,86 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 2826 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(Alvin Phiri - Software Engineer) Tj T*
+(Full-stack development, cloud and systems.) Tj T*
+() Tj T*
+(CONTACT) Tj T*
+(+263 785 865 565 | aphiri1658@gmail.com | Zimbabwe) Tj T*
+(iam-alvinphiri.netlify.app | github.com/hwevaproduction-debug) Tj T*
+() Tj T*
+(PROFESSIONAL SUMMARY) Tj T*
+(Computer Science graduate and software engineer with hands-on experience) Tj T*
+(developing a full-stack real-estate platform. Work spans frontend and backend) Tj T*
+(application development, REST APIs, relational databases, authentication and) Tj T*
+(authorization, containerized deployment, reverse-proxy configuration, cloud-) Tj T*
+(related infrastructure, background processing, and technical documentation.) Tj T*
+(Town Ruins is the primary project record; artifacts establish implemented work,) Tj T*
+(but not a current live runtime, production outcomes, or personal product ownership.) Tj T*
+() Tj T*
+(ENGINEERING EXPERIENCE) Tj T*
+(Town Ruins - Real-Estate Marketplace) Tj T*
+(Software engineering contribution across a full-stack real-estate marketplace.) Tj T*
+(React/TypeScript frontend; Node.js/Express backend; REST APIs; database-backed) Tj T*
+(workflows; property/listing lifecycle; Prisma/PostgreSQL schema and migrations;) Tj T*
+(authentication; role-aware authorization; payment/webhook and reconciliation) Tj T*
+(code; notifications and background workers; Docker, Compose, Nginx, Linux,) Tj T*
+(environment configuration, AWS-related deployment/S3 configuration, and) Tj T*
+(technical and operational documentation.) Tj T*
+() Tj T*
+(TECHNICAL SKILLS) Tj T*
+(Languages: JavaScript, TypeScript, SQL, HTML, CSS) Tj T*
+(Frontend: React, responsive web development, frontend/API integration) Tj T*
+(Backend: Node.js, Express, REST APIs, authentication, authorization, RBAC) Tj T*
+(Databases: PostgreSQL, relational modelling, migrations, data management) Tj T*
+(Infrastructure: Docker, Compose, Nginx, Linux, AWS-related configuration) Tj T*
+(Engineering/Operations: Git, GitHub, CI/CD workflows, API integration, documentation) Tj T*
+() Tj T*
+(SELECTED PROJECT) Tj T*
+(Town Ruins - Full-stack property marketplace spanning application, APIs,) Tj T*
+(PostgreSQL/Prisma persistence, access control, payment and notification workflows,) Tj T*
+(Docker/Nginx configuration, and supporting documentation.) Tj T*
+() Tj T*
+(EDUCATION) Tj T*
+(Africa University - Bachelor of Science in Computer Science, 2021-2025) Tj T*
+(GPA: 3.32/4.00) Tj T*
+() Tj T*
+(CORE ENGINEERING CAPABILITIES) Tj T*
+(Full-stack engineering; backend engineering; database engineering; infrastructure) Tj T*
+(and deployment; systems thinking across services, data, networking, and operations.) Tj T*
+() Tj T*
+(CERTIFICATIONS) Tj T*
+(No credentials listed: certifications in the supplied CV were not independently verified.) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000247 00000 n 
+0000000317 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+3195
+%%EOF

@@ -63,7 +63,7 @@ The interface maintains explicit state:
 
 ```javascript
 state = {
-  view: 'initial|topics|content|projects|project',
+  view: 'initial|topics|projects|content',
   selected: null
 }
 ```
@@ -77,7 +77,7 @@ Users discover depth through interaction:
 1. **Initial:** Identity card + "Explore" button
 2. **Topics:** Menu of areas (About, Projects, Philosophy, Research, Contact)
 3. **Content:** Individual topic or project detail
-4. **Deeper:** Verified project documentation and evidence, where available
+4. **Deeper:** Town Ruins subsystem nodes, then verified project documentation and evidence
 
 Each layer is optional. Casual visitors see identity and projects. Technical visitors access depth.
 

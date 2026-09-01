@@ -327,3 +327,31 @@ Populated the authoritative Markdown content layer with evidence-backed identity
 | Branch         | main |
 | Commit          | 9dcd897 |
 | Generated From | git status + git log + repository validation |
+
+---
+
+## 2026-08-31 — Knowledge archive visual refinement
+
+**Git context:** branch `main`; baseline commit `7f1c219` (`Document authoritative content population`). This is a working-tree change; no commit was created during this task.
+
+Refined the interface into a quiet, tactile knowledge archive while retaining the Markdown manifest, explicit state model, on-demand fetches, in-memory cache, and stale-response guard. The opening is intentionally sparse; topic, project, and supporting-record views now reveal depth as indexed document entries rather than generic cards.
+
+| Area | Change |
+| --- | --- |
+| `index.html` | Reframed the application shell as an archive and improved live-region semantics. |
+| `main.js` | Preserved navigation states while using native buttons, clear return actions, loading state, document metadata, and child-record disclosure. |
+| `styles.css` | Added a restrained CSS-only paper texture, editorial typography, asymmetric reading columns, responsive recomposition, visible focus treatment, and reduced-motion support. |
+
+**Validation:** `node --check main.js`; manifest JSON parsing; all manifest paths verified; `git diff --check`; prohibited runtime/API and external-import scan; desktop and 390px local-browser visual inspection. Public Town Ruins GitHub evidence repositories were reachable at validation time.
+
+---
+
+## 2026-09-01 — Visual refinement acceptance repair
+
+Repaired the two confirmed navigation issues without changing the established visual system: content resources now resolve relative to the loaded module, and newly rendered documents reset to their beginning before receiving focus.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Added one module-relative content URL helper for the manifest and Markdown fetches. Document renders now use immediate scroll positioning before focus; menu and project-list navigation retain their existing focus behavior. |
+
+**Validation:** JavaScript syntax, manifest JSON, manifest path resolution, root-relative request scan, prohibited execution scan, static fetch checks, and stale-result guard inspection passed.
