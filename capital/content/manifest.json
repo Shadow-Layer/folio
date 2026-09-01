@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "id": "opportunities", "title": "Opportunities", "path": "opportunities/index.md", "summary": "Research subjects, not recommendations." },
+    { "id": "research", "title": "Research", "path": "research/index.md", "summary": "How to separate facts, claims, assumptions, and questions." },
+    { "id": "case-study", "title": "Case studies", "path": "case-studies/index.md", "summary": "Published only when source material is available." },
+    { "id": "questions", "title": "Questions before capital", "path": "questions/index.md", "summary": "A due-diligence lens before commitment." }
+  ]
+}

@@ -101,6 +101,79 @@ button, a { -webkit-tap-highlight-color: transparent; }
   line-height: 1.55;
 }
 
+.capital-surface {
+  position: relative;
+  max-width: 54rem;
+  margin: clamp(3.5rem, 8vw, 6.5rem) 0 0 clamp(0rem, 7vw, 5rem);
+  padding: clamp(2.8rem, 6vw, 5rem) clamp(1.5rem, 7vw, 5rem) clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  border: 1px solid rgba(138, 72, 49, 0.3);
+  border-top: 2px solid var(--accent);
+  border-radius: 0.65rem;
+  background-color: rgba(255, 253, 248, 0.16);
+  background-image: linear-gradient(112deg, rgba(138, 72, 49, 0.075), transparent 48%), radial-gradient(circle at 92% 12%, rgba(138, 72, 49, 0.1), transparent 35%);
+  box-shadow: 0 1.15rem 2.5rem rgba(54, 44, 32, 0.035), inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.capital-surface::after {
+  position: absolute;
+  top: 2.2rem;
+  right: clamp(1.5rem, 7vw, 5rem);
+  width: clamp(3.5rem, 12vw, 8rem);
+  height: clamp(3.5rem, 12vw, 8rem);
+  border-top: 1px solid rgba(138, 72, 49, 0.32);
+  border-right: 1px solid rgba(138, 72, 49, 0.32);
+  content: "";
+  pointer-events: none;
+}
+
+.capital-label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.115em;
+  line-height: 1.35;
+}
+
+.capital-surface h2 {
+  max-width: 19rem;
+  margin: 1rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.15rem, 5vw, 3.8rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.capital-copy {
+  max-width: 36rem;
+  margin: 1.1rem 0 0;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  line-height: 1.68;
+}
+
+.capital-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.7rem;
+  width: fit-content;
+  margin-top: 2.2rem;
+  margin-left: auto;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--accent);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 750;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.capital-action:hover { color: var(--accent); transform: translateX(0.22rem); }
+
 .actions { margin-top: 2.25rem; }
 button { font: inherit; }
 
@@ -235,6 +308,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
   .app { min-height: calc(100vh - 7.5rem); padding-top: clamp(3rem, 15vw, 5rem); }
   .stage { padding: clamp(2.2rem, 10vw, 3.75rem) clamp(1.1rem, 5vw, 2.4rem); border-radius: 0.9rem; }
   .opening, .archive-view, .document, .loading-state { margin-left: 0; padding-left: 0; }
+  .capital-surface { margin-left: 0; }
+  .capital-surface::after { top: 1.5rem; right: 1.5rem; }
   .archive-entry { grid-template-columns: 2.65rem minmax(0, 1fr) auto; }
   .entry-summary { font-size: 0.8rem; }
   .document { max-width: 40rem; }

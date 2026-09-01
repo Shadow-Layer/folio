@@ -74,6 +74,18 @@ function renderInitial() {
     </div>
   `;
   stage.appendChild(opening);
+
+  const capital = document.createElement('section');
+  capital.className = 'capital-surface';
+  capital.setAttribute('aria-labelledby', 'capital-title');
+  capital.innerHTML = `
+    <p class="capital-label">ALVIN / CAPITAL</p>
+    <h2 id="capital-title">Learning how capital moves.</h2>
+    <p class="capital-copy">I'm documenting my journey into property and business investment — the opportunities, the numbers, the structures, and what actually makes an investment worth considering.</p>
+    <p class="capital-copy">If you're interested in exploring opportunities with me, leave your details.</p>
+    <a class="capital-action" href="./capital/">→ Explore investment</a>
+  `;
+  stage.appendChild(capital);
   document.getElementById('btn-explore').addEventListener('click', async () => {
     await loadManifest();
     setState({ view: 'topics' });
