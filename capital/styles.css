@@ -55,7 +55,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .numbers-intro p:last-child, .section-heading p:last-child { color: var(--paper-soft); font-family: var(--serif); font-size: 1.12rem; }
 .capital-section { padding: clamp(4rem, 8vw, 7rem) 0; border-top: 1px solid var(--rule); }
 .path-section { padding-top: clamp(3.5rem, 7vw, 6rem); }
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); }
+.path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); }
 .path-card { min-height: 21rem; padding: 1.5rem; background: var(--night); border-top: 3px solid transparent; display: flex; flex-direction: column; align-items: flex-start; transition: background-color 180ms ease, border-color 180ms ease; }
 .path-card:hover, .path-card:focus-within { background: var(--night-soft); border-top-color: var(--accent); }
 .path-card .path-number { margin: 0 0 3.8rem; color: var(--paper-soft); font-family: var(--mono); font-size: 0.75rem; }
@@ -72,6 +72,8 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .nav-list strong { font-family: var(--serif); font-size: 1.55rem; font-weight: 400; }
 .nav-list small { margin-top: 0.5rem; color: var(--paper-soft); font-size: 0.78rem; line-height: 1.45; }
 .opportunity-grid, .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); }
+.opportunity-card-simple { max-width: 47rem; padding: 1.5rem; background: var(--night-soft); border: 1px solid var(--rule); }
+.opportunity-card-simple .opportunity-meta { margin: 0 0 1.5rem; }
 .opportunity, .metric { min-height: 14rem; padding: 1.5rem; background: var(--night); }
 .opportunity h3 { margin: 0.7rem 0 0; font-family: var(--serif); font-size: 1.9rem; font-weight: 400; }
 .opportunity p { color: var(--paper-soft); font-size: 0.9rem; }
@@ -144,6 +146,9 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .content-actions { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; margin-top: 3rem; }
 .content-actions .return-link { margin-top: 0; }
 .loading { padding: 10rem 0; color: var(--paper-soft); }
+.closing-section { text-align: center; padding: clamp(5rem, 10vw, 8rem) 0; }
+.closing-section h2 { margin: 0.8rem 0; }
+.closing-section p { max-width: 47rem; margin: 1rem auto 0; }
 .interest-dock { position: fixed; z-index: 5; right: 0; bottom: 1.5rem; display: flex; gap: 0.8rem; align-items: center; padding: 0.7rem 1rem 0.7rem 1.2rem; border: 1px solid var(--rule); border-right: 0; color: var(--paper); background: rgba(16, 19, 22, 0.94); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
 .interest-dock span { color: var(--accent); }
 .interest-dock:hover { color: var(--accent); }
@@ -157,8 +162,8 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   .path-grid { grid-template-columns: 1fr; }
   .path-card { min-height: 16rem; }
   .path-card .path-number { margin-bottom: 2.5rem; }
-  .dream-band { margin-right: -1rem; margin-left: -1rem; }
-  .nav-list, .path-grid, .opportunity-grid, .metric-grid, .simulation, .timeline, .next-steps-grid { grid-template-columns: 1fr 1fr; }
+  .nav-list, .opportunity-grid, .metric-grid, .simulation, .timeline, .next-steps-grid { grid-template-columns: 1fr 1fr; }
+  .nav-list button { border-right: 0; }
   .nav-list button:nth-child(2) { border-right: 0; }
   .nav-list button:nth-child(3), .nav-list button:nth-child(4) { border-top: 0; }
   .nav-list button:nth-child(3) { padding-left: 0; }
@@ -172,7 +177,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 @media (max-width: 480px) {
   .capital-footer { display: block; }
   .capital-footer span { display: block; margin-top: 0.4rem; }
-  .nav-list, .path-grid, .opportunity-grid, .metric-grid, .simulation, .timeline, .next-steps-grid { grid-template-columns: 1fr; }
+  .nav-list, .opportunity-grid, .metric-grid, .simulation, .timeline, .next-steps-grid { grid-template-columns: 1fr; }
   .nav-list button, .nav-list button + button { padding: 1rem 0; border-right: 0; }
   .opportunity { min-height: 0; }
   .opportunity-feature { grid-column: auto; }
