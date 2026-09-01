@@ -39,3 +39,5 @@ The underlying asset, title, approvals, costs, operator, financing, timeline, ma
 - What would make the underlying use valuable over time?
 
 This is an educational research subject, not a solicitation or recommendation.
+
+[Explore Azizi Venice / Case Study 001 →](./opportunities/azizi-venice/)

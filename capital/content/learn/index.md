@@ -16,9 +16,9 @@ A staged payment plan divides an obligation across agreed dates or milestones. T
 
 Return on investment is a comparison between an outcome and the amount committed. Historical performance describes what happened; projected performance describes an assumption about what might happen; neither is an actual outcome in advance.
 
-## 04 — What makes a property investment attractive?
+## 04 — What makes an opportunity attractive?
 
-Location, demand, supply, pricing, financing, development stage, exit assumptions, costs, and risk all matter. No single factor makes a specific property attractive without evidence.
+Location, demand, price, financing, liquidity, ownership, operating costs, development risk, exit assumptions, and evidence all matter. No single factor makes a specific opportunity attractive without investigation.
 
 ## 05 — What can go wrong?
 
