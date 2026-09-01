@@ -124,7 +124,7 @@ function renderHome() {
         <div class="section-heading"><p class="section-index">01 / LEARNING COMMUNITY</p><h2 id="astra-title">Astra Terra</h2><p>A place to learn investment together.</p></div>
         <div class="astra-panel">
           <div class="astra-content">
-            <p>I'm building Astra Terra as a learning group for people who want to understand property, business and emerging investment opportunities — without pretending to already know everything.</p>
+            <p>I joined Astra Terra, a learning group for people who want to understand property, business and emerging investment opportunities — without pretending to already know everything.</p>
             <p>The tone is humble, investigative and credible. We explore ideas, ask questions, examine assumptions, and learn together.</p>
             <div class="topic-tags">
               <span class="topic-tag">PROPERTY</span>
