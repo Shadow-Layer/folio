@@ -1,8 +1,11 @@
 {
   "items": [
+    { "id": "learn", "title": "Learn Capital", "path": "learn/index.md", "summary": "Six concise lessons for understanding investment before participation." },
     { "id": "opportunities", "title": "Opportunities", "path": "opportunities/index.md", "summary": "Research subjects, not recommendations." },
+    { "id": "azizi-venice", "title": "Azizi Venice", "path": "opportunities/azizi-venice.md", "summary": "Case Study 001 — source material pending verification." },
     { "id": "research", "title": "Research", "path": "research/index.md", "summary": "How to separate facts, claims, assumptions, and questions." },
     { "id": "case-study", "title": "Case studies", "path": "case-studies/index.md", "summary": "Published only when source material is available." },
-    { "id": "questions", "title": "Questions before capital", "path": "questions/index.md", "summary": "A due-diligence lens before commitment." }
+    { "id": "questions", "title": "Questions before capital", "path": "questions/index.md", "summary": "A due-diligence lens before commitment." },
+    { "id": "register", "title": "Register interest", "path": "register/index.md", "summary": "A simple enquiry route, not a transaction." }
   ]
 }

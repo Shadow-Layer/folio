@@ -1,6 +1,8 @@
 const app = document.getElementById('capital-app');
 const base = new URL('./content/', import.meta.url);
+const capitalRoot = new URL('./', import.meta.url);
 const cache = new Map();
+const routes = { home: './', learn: './learn/', opportunities: './opportunities/', 'azizi-venice': './opportunities/azizi-venice/', research: './#research', questions: './#questions', register: './register/' };
 let state = { view: 'home' };
 
 const contentUrl = (path) => new URL(path, base).href;
@@ -40,9 +42,21 @@ async function readContent(path) {
 
 function navigate(view) {
   state = { view };
-  history.pushState({ capitalView: view }, '', view === 'home' ? './' : `#${view}`);
+  history.pushState({ capitalView: view }, '', new URL(routes[view] || routes.home, capitalRoot));
   render();
 }
+
+function viewFromLocation() {
+  const path = window.location.pathname.replace(/\/$/, '');
+  const root = capitalRoot.pathname.replace(/\/$/, '');
+  if (path === `${root}/learn`) return 'learn';
+  if (path === `${root}/opportunities`) return 'opportunities';
+  if (path === `${root}/opportunities/azizi-venice`) return 'azizi-venice';
+  if (path === `${root}/register`) return 'register';
+  return window.location.hash === '#research' ? 'research' : window.location.hash === '#questions' ? 'questions' : 'home';
+}
+
+function routeHref(view) { return new URL(routes[view] || routes.home, capitalRoot).pathname; }
 
 function action(label, view, secondary = false) {
   const button = document.createElement('button');
@@ -58,20 +72,30 @@ function renderHome() {
     <div class="capital-view">
       <section class="capital-hero" aria-labelledby="capital-title">
         <div>
-          <p class="eyebrow">ALVIN / CAPITAL</p>
-          <h1 id="capital-title">What if investing didn't<br>start with millions?</h1>
-          <p class="hero-deck">Explore property and business opportunities. Understand the numbers. Follow the progress. Decide for yourself.</p>
+          <p class="eyebrow">CAPITAL</p>
+          <h1 id="capital-title">Learn about it.<br>Explore it.<br>Invest when you're ready.</h1>
+          <p class="hero-deck">A simple way to discover property and business investment opportunities, understand how they work, and register your interest.</p>
+          <p class="affiliation">Investment opportunities presented through Alvin's partner network.</p>
           <div class="hero-actions" id="hero-actions"></div>
           <p class="scroll-note">↓ Begin with curiosity</p>
         </div>
       </section>
 
+      <section class="capital-section path-section" aria-labelledby="paths-title">
+        <div class="section-heading"><p class="section-index">00 / THE GATEWAY</p><h2 id="paths-title">Understand. Explore. Participate.</h2></div>
+        <div class="path-grid">
+          <article class="path-card"><p class="path-number">01</p><p class="eyebrow">LEARN</p><h3>Understand investment before you commit.</h3><button class="capital-button" type="button" data-route="learn">Explore learning →</button></article>
+          <article class="path-card"><p class="path-number">02</p><p class="eyebrow">OPPORTUNITIES</p><h3>See what's currently available.</h3><button class="capital-button" type="button" data-route="opportunities">View opportunities →</button></article>
+          <article class="path-card"><p class="path-number">03</p><p class="eyebrow">INVEST</p><h3>Interested in participating?</h3><button class="capital-button" type="button" data-route="register">Register interest →</button></article>
+        </div>
+      </section>
+
       <section class="capital-section" aria-labelledby="opportunities-title">
-        <div class="section-heading"><p class="section-index">01 / DISCOVERY</p><h2 id="opportunities-title">What are people building?</h2><p>Research subjects, not recommendations. Start with the shape of an opportunity before looking for an answer.</p></div>
+        <div class="section-heading"><p class="section-index">01 / CURRENTLY EXPLORING</p><h2 id="opportunities-title">Opportunities</h2><p>Research subjects, not recommendations. Start with the shape of an opportunity before looking for an answer.</p></div>
         <div class="opportunity-grid">
-          <article class="opportunity"><p class="eyebrow">SUBJECT / 001</p><h3>Property</h3><p>Places, use, ownership, construction, and the assumptions around value.</p></article>
-          <article class="opportunity"><p class="eyebrow">SUBJECT / 002</p><h3>Business</h3><p>Products, operations, customers, margins, and the work required to make an idea durable.</p></article>
-          <article class="opportunity"><p class="eyebrow">SUBJECT / 003</p><h3>Development</h3><p>How a plan moves from land and approvals to a built environment.</p></article>
+          <article class="opportunity opportunity-feature"><p class="eyebrow">CASE STUDY / 001</p><h3>Azizi Venice</h3><p>Dubai · Property</p><p class="opportunity-meta">A research destination. Source material and current opportunity details remain pending verification.</p><button class="capital-button" type="button" data-route="azizi-venice">Explore opportunity →</button></article>
+          <article class="opportunity"><p class="eyebrow">COMING SOON</p><h3>Business</h3><p>No opportunity published yet.</p></article>
+          <article class="opportunity"><p class="eyebrow">COMING SOON</p><h3>Property</h3><p>No opportunity published yet.</p></article>
         </div>
         <div class="section-actions" id="opportunity-actions"></div>
       </section>
@@ -95,12 +119,13 @@ function renderHome() {
       <section class="capital-section final-section" aria-labelledby="final-title"><p class="eyebrow">ALVIN / CAPITAL</p><h2 id="final-title">Capital shouldn't be mysterious.</h2><p class="hero-deck">I'm building a better way to explore investment opportunities — starting with understanding them properly.</p><div class="hero-actions" id="final-actions"></div></section>
     </div>`;
   document.getElementById('hero-actions').append(action('Explore opportunities', 'opportunities'));
-  document.getElementById('hero-actions').append(action("I'm interested", 'interest', true));
+  document.getElementById('hero-actions').append(action("I'm interested", 'register', true));
   document.getElementById('opportunity-actions').append(action('Explore opportunity research →', 'opportunities'));
   document.getElementById('research-actions').append(action('Open research method →', 'research'));
   document.getElementById('question-actions').append(action('Open questions →', 'questions'));
   document.getElementById('final-actions').append(action('Explore opportunities', 'opportunities'));
-  document.getElementById('final-actions').append(action('Register interest', 'interest', true));
+  document.getElementById('final-actions').append(action('Register interest', 'register', true));
+  app.querySelectorAll('[data-route]').forEach((control) => control.addEventListener('click', () => navigate(control.dataset.route)));
   bindSimulation();
 }
 
@@ -118,7 +143,7 @@ function bindSimulation() {
 }
 
 async function renderContent(view) {
-  const records = { opportunities: ['Opportunities', 'opportunities/index.md'], research: ['Research', 'research/index.md'], 'case-study': ['Case Studies', 'case-studies/index.md'], questions: ['Questions Before Capital', 'questions/index.md'] };
+  const records = { learn: ['Learn Capital', 'learn/index.md'], opportunities: ['Opportunities', 'opportunities/index.md'], 'azizi-venice': ['Azizi Venice', 'opportunities/azizi-venice.md'], research: ['Research', 'research/index.md'], 'case-study': ['Case Studies', 'case-studies/index.md'], questions: ['Questions Before Capital', 'questions/index.md'], register: ['Register Interest', 'register/index.md'] };
   const record = records[view];
   if (!record) return renderHome();
   app.innerHTML = `<div class="capital-view"><section class="capital-section content-panel"><p class="eyebrow">ALVIN / CAPITAL</p><div class="loading">Reading the research…</div></section></div>`;
@@ -136,9 +161,8 @@ async function renderContent(view) {
 }
 
 function render() {
-  if (state.view === 'home' || state.view === 'interest') {
+  if (state.view === 'home') {
     renderHome();
-    if (state.view === 'interest') document.getElementById('interest').scrollIntoView({ block: 'start' });
     return;
   }
   renderContent(state.view);
