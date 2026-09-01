@@ -2,7 +2,7 @@
 
 Public contact information is available through:
 
-- **Portfolio:** [iam-alvinphiri.netlify.app](https://iam-alvinphiri.netlify.app/)
+- **Portfolio:** [alvinphiri.online](https://alvinphiri.online/)
 - **Email:** aphiri1658@gmail.com
 
 The portfolio and email address are taken from the supplied professional profile source. No other contact endpoint is asserted here.
