@@ -80,4 +80,4 @@ Adding approved files to the working tree is not a git commit or deployment. Do 
 
 ## 7 — Keep interview preparation separate
 
-Do not create interview guides during discovery, selection, record generation, or publication. When the user later requests preparation for a particular role, use that role's extracted requirements and the user's actual background to provide a private, tailored session. Keep those notes out of the public record.
+Do not create interview guides during discovery, selection, record generation, or publication. The detail-page mock interview launcher creates a transient, role-specific prompt from the selected public brief and available CV evidence; it does not save preparation material in public records. The visitor chooses the external provider and must explicitly open a prefilled link or paste the copied prompt before prompt content reaches that provider. When separately preparing a role, use that role's extracted requirements and the user's actual background. Keep all preparation notes out of public records.

@@ -12,7 +12,7 @@ Follow [WORKFLOW.md](WORKFLOW.md) for the full repeatable procedure. In short:
 4. Review the proposed record content and manifest metadata. The agent waits for explicit approval before adding selected records to `content/opportunities/` and `content/manifest.json`.
 5. Commits and deployment are separate actions and never happen automatically.
 
-Interview preparation is not part of this flow. Request it separately for a specific opportunity.
+Interview preparation is not part of this publication flow. Each opportunity detail page has a **Start mock interview** action that builds a prompt at runtime from that specific brief and available, evidence-based CV material. It is not written to the public opportunity record or manifest. The visitor must choose an external assistant; the prompt leaves the portfolio only when they open a prefilled link or paste the copied prompt into that assistant.
 
 ## Published record conventions
 
@@ -32,3 +32,10 @@ Interview preparation is not part of this flow. Request it separately for a spec
 Every published opportunity is a top-level `content/manifest.json` item with `kind: "opportunity"` and the existing `path`, `title`, and `summary` fields. Opportunity metadata may include `organization`, `opportunityType`, `location`, `eligibleCountries`, `workArrangement`, `employmentArrangement`, `compensation`, `workingHours`, `dateDiscovered`, `lastVerified`, `deadline`, and `status`. Omit unknown optional facts. `applicationUrl` stores the exact attributed destination; set `applicationUrlVerified` to `true` only after verifying that it is the user's supplied referral URL or the job-specific referral destination. Individual job URLs are never stored in public metadata.
 
 The public template, manifest, and renderer are intentionally not an intake database. Keep discovery notes and individual listing URLs in agent-side working context, not in portfolio content.
+
+## Mock interview launcher
+
+- The launcher uses the selected opportunity's complete Markdown brief and relevant candidate evidence from `cv.md`. It excludes CV contact details and strips URLs and referral attribution from prompt context.
+- The prompt exists only in the visitor's browser. The portfolio does not run an interview or call an AI API.
+- ChatGPT's `?q=` prompt URL is used only when the encoded launch URL is within the configured length limit; otherwise the visitor copies the prompt. Claude and Gemini open at their provider destinations without prompt parameters because reliable prepopulation is not established. **Other / Copy prompt** always uses the copy fallback.
+- Provider destinations and the ChatGPT URL limit are centralized in `main.js`. Keep provider selection explicit and retain the copy fallback when provider behavior or URL length is uncertain.
