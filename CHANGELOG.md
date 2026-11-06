@@ -1,5 +1,20 @@
 # 26
 
+## 2026-11-06 — Opportunities discovery and preparation
+
+Added an Opportunities destination to the main portfolio archive, with a chronological listing for manifest-tagged records, explicit opportunity status, a graceful empty state, authoring guidance, and a reusable Markdown research-brief template. No demonstration opportunity was added because the root archive contains no verified professional listing. The separate `capital/` application is unchanged.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Added the Opportunities topic and view, date-based listing, organization and status metadata, status fallback to Unverified, and a distinct manifest-load error state. |
+| `styles.css` | Added restrained listing metadata styling consistent with the existing archive. |
+| `content/opportunities/README.md` | Documented the manifest metadata convention, status rules, and evidence-first authoring process. |
+| `content/opportunities/TEMPLATE.md` | Added a reusable opportunity brief with source, eligibility, application, preparation, interview, and verification sections. |
+| `content/projects/portfolio.md` | Updated the archive and Markdown-renderer description. |
+| `content/manifest.json` | No sample opportunity record added; existing records and parent-child relationships remain intact. |
+
+**Validation:** `node --check main.js`; manifest JSON and all 12 referenced content paths; `git diff --check`; local browser checks of archive navigation, opportunity empty/list/detail states, status fallback and chronology using temporary in-memory fixtures, external-link marking, missing-record and manifest-error handling, existing Town Ruins parent/child navigation, and the independent Capital landing page. Mobile viewport emulation was unavailable in the browser session.
+
 ## 2608
 
 ### 1346

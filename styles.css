@@ -233,6 +233,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 .entry-title, .entry-summary { display: block; }
 .entry-title { font-family: var(--serif); font-size: clamp(1.3rem, 2.8vw, 1.7rem); line-height: 1.12; }
 .entry-summary { max-width: 43rem; margin-top: 0.45rem; color: var(--ink-soft); font-size: 0.83rem; line-height: 1.55; }
+.entry-meta { display: block; margin-top: 0.5rem; color: var(--ink-soft); font-size: 0.7rem; line-height: 1.55; }
 .entry-arrow { align-self: center; padding-left: 1.2rem; font-size: 1.25rem; transition: transform 160ms ease; }
 .archive-entry:hover .entry-arrow { transform: translateX(0.25rem); }
 .project-list .archive-entry:first-child { border-top: 2px solid var(--accent); }

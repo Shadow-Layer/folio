@@ -51,11 +51,12 @@ about.md                 — Identity
 design-philosophy.md     — The principles
 projects/town-ruins.md   — Primary project evidence
 projects/portfolio.md    — This file
+opportunities/           — Opportunity authoring guide and brief template
 research.md              — Technical thinking
 contact.md               — Contact methods
 ```
 
-A single `manifest.json` indexes available content. The interface reads and renders content on demand.
+A single `manifest.json` indexes available content. The interface reads and renders content on demand. Opportunities are top-level records tagged with `kind: "opportunity"`; their listing metadata lives in the manifest and their detailed briefs live under `content/opportunities/`.
 
 ### State-Driven
 
@@ -63,7 +64,7 @@ The interface maintains explicit state:
 
 ```javascript
 state = {
-  view: 'initial|topics|projects|content',
+  view: 'initial|topics|projects|opportunities|content',
   selected: null
 }
 ```
@@ -75,9 +76,10 @@ State changes trigger specific rendering functions. There is no polling, no cont
 Users discover depth through interaction:
 
 1. **Initial:** Identity card + "Explore" button
-2. **Topics:** Menu of areas (About, Projects, Philosophy, Research, Contact)
-3. **Content:** Individual topic or project detail
-4. **Deeper:** Town Ruins subsystem nodes, then verified project documentation and evidence
+2. **Topics:** Menu of areas (About, Projects, Opportunities, Philosophy, Research, CV, Contact)
+3. **Collection:** Project or opportunity listings
+4. **Content:** Individual topic, project, opportunity brief, or supporting record
+5. **Deeper:** Town Ruins subsystem nodes, then verified project documentation and evidence
 
 Each layer is optional. Casual visitors see identity and projects. Technical visitors access depth.
 
@@ -97,14 +99,18 @@ Markdown rendering supports:
 
 - Headings (H1-H6)
 - Paragraphs
-- Lists (unordered)
-- Basic text sanitization
+- Unordered lists and fenced code blocks
+- Bold text, HTTP(S) links, and local images
+- HTML sanitization
 
 This is intentionally minimal. It avoids:
 
 - Markdown frameworks (which add kilobytes)
 - HTML injection vulnerabilities
 - Unnecessary feature complexity
+- Unsupported tables, ordered lists, YAML front matter, and inline code markup
+
+Opportunity authoring guidance and a reusable Markdown template are in `content/opportunities/README.md` and `content/opportunities/TEMPLATE.md`. Only sourced and verified opportunities should be added to the manifest; an absent record does not imply availability.
 
 ### Keyboard Navigation
 

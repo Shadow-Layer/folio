@@ -4,9 +4,11 @@ const el = (id) => document.getElementById(id);
 const stage = el('stage');
 
 let manifest = null;
+let manifestLoadFailed = false;
 let contentCache = {};
 let state = { view: 'initial', selected: null };
 const contentBase = new URL('./content/', import.meta.url);
+const opportunityStatuses = ['Open', 'Closing Soon', 'Closed', 'Paused', 'Unverified'];
 
 function contentUrl(path) {
   return new URL(path, contentBase).href;
@@ -17,12 +19,19 @@ async function loadManifest() {
   if (manifest) return manifest;
   try {
     const res = await fetch(contentUrl('manifest.json'));
+    if (!res.ok) throw new Error('Manifest request failed');
     manifest = await res.json();
+    if (!manifest || !Array.isArray(manifest.items)) throw new Error('Manifest has an invalid shape');
     return manifest;
   } catch (e) {
+    manifestLoadFailed = true;
     manifest = { items: [] };
     return manifest;
   }
+}
+
+function getOpportunityStatus(item) {
+  return opportunityStatuses.includes(item.status) ? item.status : 'Unverified';
 }
 
 // Update state and re-render
@@ -51,6 +60,9 @@ function render() {
       break;
     case 'projects':
       showProjectsList();
+      break;
+    case 'opportunities':
+      showOpportunitiesList();
       break;
     case 'content':
       if (state.selected) openContent(state.selected);
@@ -257,6 +269,7 @@ async function showTopics() {
   const topics = [
     { id: 'about', title: 'About / Identity', file: 'about.md' },
     { id: 'projects', title: 'Projects', file: null },
+    { id: 'opportunities', title: 'Opportunities', file: null },
     { id: 'philosophy', title: 'Design Philosophy', file: 'design-philosophy.md' },
     { id: 'research', title: 'Research / Thinking', file: 'research.md' },
     { id: 'cv', title: 'CV', file: 'cv.md' },
@@ -301,6 +314,8 @@ async function showTopics() {
     if (t.file) {
       const item = data.items.find(i => i.path === t.file);
       p.textContent = item ? (item.summary || 'Open to read') : 'No content';
+    } else if (t.id === 'opportunities') {
+      p.textContent = 'Research-backed opportunities, with preparation notes and original sources';
     } else {
       p.textContent = 'Explore projects';
     }
@@ -317,6 +332,8 @@ async function showTopics() {
     d.addEventListener('click', () => {
       if (t.id === 'projects') {
         setState({ view: 'projects' });
+      } else if (t.id === 'opportunities') {
+        setState({ view: 'opportunities' });
       } else {
         setState({ view: 'content', selected: t.file });
       }
@@ -327,6 +344,114 @@ async function showTopics() {
 
   view.appendChild(list);
   stage.appendChild(view);
+  focusStage();
+}
+
+// Show curated opportunities from top-level manifest records
+async function showOpportunitiesList() {
+  const data = await loadManifest();
+  if (state.view !== 'opportunities') return;
+  setStageBusy(false);
+
+  stage.innerHTML = '';
+  const wrap = document.createElement('section');
+  wrap.className = 'archive-view opportunities-view';
+  wrap.innerHTML = `
+    <header class="view-heading">
+      <p class="kicker">Curated opportunities <span aria-hidden="true">—</span> 04</p>
+      <h1>Opportunities, considered.</h1>
+      <p>Research briefs for understanding the role, preparing thoughtfully, and reaching the original source.</p>
+    </header>
+  `;
+
+  const back = document.createElement('button');
+  back.type = 'button';
+  back.className = 'return-link';
+  back.innerHTML = '<span aria-hidden="true">←</span> Return to index';
+  back.addEventListener('click', () => setState({ view: 'topics' }));
+
+  if (manifestLoadFailed) {
+    wrap.insertAdjacentHTML('beforeend', '<p class="empty-state">The archive index could not be loaded, so opportunity records are unavailable. Try again after reloading the archive.</p>');
+    wrap.appendChild(back);
+    stage.appendChild(wrap);
+    focusStage();
+    return;
+  }
+
+  const opportunities = data.items
+    .filter(item => item.kind === 'opportunity')
+    .sort((a, b) => {
+      const aDate = Date.parse(a.dateDiscovered || '');
+      const bDate = Date.parse(b.dateDiscovered || '');
+      if (Number.isNaN(aDate)) return Number.isNaN(bDate) ? 0 : 1;
+      if (Number.isNaN(bDate)) return -1;
+      return bDate - aDate;
+    });
+
+  if (opportunities.length === 0) {
+    wrap.insertAdjacentHTML('beforeend', '<p class="empty-state">No verified professional opportunities are listed yet. Records will appear here when their source and details have been checked.</p>');
+    wrap.appendChild(back);
+    stage.appendChild(wrap);
+    focusStage();
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'archive-list opportunity-list';
+
+  for (const [index, opportunity] of opportunities.entries()) {
+    const entry = document.createElement('button');
+    entry.className = 'archive-entry';
+    entry.type = 'button';
+    entry.setAttribute('aria-label', `Open ${opportunity.title || 'opportunity record'}; status ${getOpportunityStatus(opportunity)}`);
+
+    const number = document.createElement('span');
+    number.className = 'entry-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+    number.setAttribute('aria-hidden', 'true');
+    entry.appendChild(number);
+
+    const copy = document.createElement('span');
+    copy.className = 'entry-copy';
+    const title = document.createElement('span');
+    title.className = 'entry-title';
+    title.textContent = opportunity.title || opportunity.path.replace(/^opportunities\//, '').replace('.md', '');
+    copy.appendChild(title);
+
+    const summary = document.createElement('span');
+    summary.className = 'entry-summary';
+    summary.textContent = opportunity.summary || 'Open to read the opportunity brief';
+    copy.appendChild(summary);
+
+    const metadata = [
+      opportunity.organization,
+      opportunity.location,
+      opportunity.workArrangement,
+      opportunity.employmentArrangement,
+      opportunity.dateDiscovered ? `Discovered ${opportunity.dateDiscovered}` : null,
+      opportunity.lastVerified ? `Verified ${opportunity.lastVerified}` : 'Verification date not recorded',
+      opportunity.deadline ? `Deadline ${opportunity.deadline}` : null,
+      `Status: ${getOpportunityStatus(opportunity)}`
+    ].filter(Boolean);
+    const details = document.createElement('span');
+    details.className = 'entry-meta';
+    details.textContent = metadata.join(' · ');
+    copy.appendChild(details);
+    entry.appendChild(copy);
+
+    const arrow = document.createElement('span');
+    arrow.className = 'entry-arrow';
+    arrow.textContent = '→';
+    arrow.setAttribute('aria-hidden', 'true');
+    entry.appendChild(arrow);
+
+    entry.addEventListener('click', () => setState({ view: 'content', selected: opportunity.path }));
+    list.appendChild(entry);
+  }
+
+  wrap.appendChild(list);
+  wrap.appendChild(back);
+  stage.appendChild(wrap);
   focusStage();
 }
 
@@ -453,6 +578,8 @@ function navigateBack(path) {
   const item = manifest && manifest.items.find(i => i.path === path);
   if (item && item.parent) {
     setState({ view: 'content', selected: item.parent });
+  } else if (item && item.kind === 'opportunity') {
+    setState({ view: 'opportunities', selected: null });
   } else if (path && path.startsWith('projects/')) {
     setState({ view: 'projects', selected: null });
   } else {
@@ -472,7 +599,13 @@ function displayContent(md, path) {
   if (title) title.classList.add('document-title');
   const meta = document.createElement('p');
   meta.className = 'document-meta';
-  meta.textContent = record && record.parent ? 'Supporting record' : path.startsWith('projects/') ? 'Project record' : 'Archive note';
+  meta.textContent = record && record.parent
+    ? 'Supporting record'
+    : record && record.kind === 'opportunity'
+      ? `Opportunity brief · ${getOpportunityStatus(record)}`
+      : path.startsWith('projects/')
+        ? 'Project record'
+        : 'Archive note';
   div.insertBefore(meta, div.firstChild);
 
   const children = manifest ? manifest.items.filter(i => i.parent === path) : [];
@@ -525,7 +658,14 @@ function displayContent(md, path) {
   const back = document.createElement('button');
   back.type = 'button';
   back.className = 'return-link';
-  back.innerHTML = '<span aria-hidden="true">←</span> ' + (record && record.parent ? 'Return to parent record' : path.startsWith('projects/') ? 'Return to projects' : 'Return to index');
+  const returnLabel = record && record.parent
+    ? 'Return to parent record'
+    : record && record.kind === 'opportunity'
+      ? 'Return to opportunities'
+      : path.startsWith('projects/')
+        ? 'Return to projects'
+        : 'Return to index';
+  back.innerHTML = '<span aria-hidden="true">←</span> ' + returnLabel;
   back.addEventListener('click', () => navigateBack(path));
   div.appendChild(back);
 

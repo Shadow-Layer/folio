@@ -79,6 +79,3 @@ Bachelor of Science in Computer Science · 2021–2025 · GPA: 3.32/4.00
 - **Infrastructure and deployment:** Dockerized service composition, Nginx configuration, Linux environments, AWS-related configuration, and environment management.
 - **Systems thinking:** understanding application services, databases, networking, deployment configuration, and operational processes as one system.
 
-## Certifications
-
-No credentials are listed here because the certifications named in the supplied CV were not independently verified.

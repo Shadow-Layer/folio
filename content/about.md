@@ -6,7 +6,7 @@ I am Alvin Phiri, a Computer Science graduate and Software Engineer based in Zim
 
 My hands-on work spans application and infrastructure layers: frontend and backend development, REST APIs, relational databases, authentication and authorization, containerized deployment, Linux systems, and operational troubleshooting.
 
-The primary engineering project documented here is [Town Ruins](https://github.com/hwevaproduction-debug/towruins), a full-stack real-estate marketplace. It provides the deepest available evidence of how I work across a system rather than only within one application layer.
+The primary engineering project documented here is [Town Ruins](app.townruins.com), a full-stack real-estate marketplace. It provides the deepest available evidence of how I work across a system rather than only within one application layer.
 
 ## Current direction
 
