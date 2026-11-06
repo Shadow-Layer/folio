@@ -1,38 +1,34 @@
-# Adding an opportunity
+# Opportunities
 
-Opportunities belong to the main portfolio archive. Do not add them to the separate `capital/` application.
+This archive contains only opportunities selected by Alvin and approved for publication. The agent handles discovery, extraction, record preparation, and validation; referral URLs are preserved exactly. No opportunity is added to the portfolio just because it appeared in a catalogue.
 
-## Add a record
+## Intake and publication
 
-- Copy `TEMPLATE.md` to a descriptive file such as `content/opportunities/backend-engineer.md`.
-- Complete the brief using verified sources. Leave unavailable facts explicitly unverified; do not infer requirements, availability, salary, deadline, or interview stages.
-- Add a top-level item to `content/manifest.json` with `kind` set to `opportunity`.
-- Check the content path, original source, verification date, claims, and status before publishing.
+Follow [WORKFLOW.md](WORKFLOW.md) for the full repeatable procedure. In short:
 
-The manifest item uses the existing `path`, `title`, and `summary` fields and supports these opportunity fields:
+1. Provide one or more referral URLs, optional individual listing URLs, and any preferences.
+2. The agent checks public access, discovers listings, opens each accessible job page, and prepares a discovery catalogue. No accounts, authentication bypasses, applications, or unrestricted scraping.
+3. Select the specific opportunities to prepare. Unselected or rejected listings never become portfolio files or manifest entries.
+4. Review the proposed record content and manifest metadata. The agent waits for explicit approval before adding selected records to `content/opportunities/` and `content/manifest.json`.
+5. Commits and deployment are separate actions and never happen automatically.
 
-- `kind`: exactly `opportunity`.
-- `organization`: verified organisation name.
-- `opportunityType`: for example, employment or internship when supported by the source.
-- `location`, `workArrangement`, `employmentArrangement`: include only when known.
-- `dateDiscovered`, `lastVerified`: ISO dates in `YYYY-MM-DD` form; do not claim a current verification if none occurred.
-- `deadline`: verified deadline, including time zone where available; omit it if unknown.
-- `status`: exactly `Open`, `Closing Soon`, `Closed`, `Paused`, or `Unverified`. Missing or unrecognized values display as `Unverified`.
+Interview preparation is not part of this flow. Request it separately for a specific opportunity.
 
-The listing sorts by `dateDiscovered`, newest first. Records without a usable date appear after dated records. Status is editorially maintained; it is not inferred from the deadline or from the record's presence.
+## Published record conventions
 
-## Write the brief
+- Copy `TEMPLATE.md` for each selected opportunity. The Markdown page is a complete brief, not a link-out to the employer page.
+- Individual job-page URLs are research-only and must not appear in public Markdown or manifest data. Do not include source citations that expose those URLs.
+- The only external opportunity link is the exact referral application URL in the manifest's `applicationUrl` field. The detail page renders it as **I'm ready to apply — Apply now**. Do not add a direct listing, direct application, or untracked alternative link.
+- If the referral source has a job-specific referral application URL, use it exactly; otherwise use the complete original catalogue referral URL. Never rebuild or strip referral codes, link identifiers, or tracking parameters. If an attributed destination cannot be verified, do not publish; ask for clarification.
+- The public board has its own responsive card layout and detail view. It is an independent destination, not a Folio subsection. The public Opportunities UI must not name the referral platform.
+- Do not add other external links to an opportunity record. The renderer suppresses external Markdown links and raw URLs in opportunity pages; internal record navigation remains available.
+- A record is shown on the board only when it has an HTTPS `applicationUrl` and `applicationUrlVerified: true`. Missing or unverified destinations are excluded instead of getting a misleading CTA.
+- Label claims Verified, Unverified, or Unavailable. Missing information is not a negative answer and must not be inferred.
+- Keep status editorially maintained. A listing page or visible application control is not proof of availability. Use `Open`, `Closing Soon`, `Closed`, `Paused`, or `Unverified`; default to `Unverified` when current availability is not confirmed.
+- Use `dateDiscovered` and `lastVerified` as ISO `YYYY-MM-DD` dates. The archive sorts by discovery date, newest first.
 
-The Markdown record is the detailed, standalone research brief. Identify the original source and verification date near the top. Clearly label:
+## Manifest fields
 
-- Original employer information, preserving requirements without silent edits.
-- Independently researched organisation facts, with sources.
-- Editorial interpretation.
-- Candidate recommendations.
-- Potential interview questions developed independently (not actual employer questions).
+Every published opportunity is a top-level `content/manifest.json` item with `kind: "opportunity"` and the existing `path`, `title`, and `summary` fields. Opportunity metadata may include `organization`, `opportunityType`, `location`, `eligibleCountries`, `workArrangement`, `employmentArrangement`, `compensation`, `workingHours`, `dateDiscovered`, `lastVerified`, `deadline`, and `status`. Omit unknown optional facts. `applicationUrl` stores the exact attributed destination; set `applicationUrlVerified` to `true` only after verifying that it is the user's supplied referral URL or the job-specific referral destination. Individual job URLs are never stored in public metadata.
 
-State when a source is unavailable or information could not be verified. Distinguish confirmed application instructions from recommendations. Keep expired records only when useful as references and mark them `Closed`.
-
-The reader supports headings, paragraphs, unordered lists, fenced code blocks, bold text, HTTP(S) links, and local images. It does not support Markdown tables, ordered lists, YAML front matter, or inline code formatting. Use numbered headings such as `## 1 — Submit the application` for ordered application steps. External HTTP(S) links are visually identified by the reader.
-
-There are no opportunity records published yet. Do not add a demonstration entry unless an actual professional opportunity and its original source have been verified.
+The public template, manifest, and renderer are intentionally not an intake database. Keep discovery notes and individual listing URLs in agent-side working context, not in portfolio content.

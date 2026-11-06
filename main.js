@@ -34,6 +34,19 @@ function getOpportunityStatus(item) {
   return opportunityStatuses.includes(item.status) ? item.status : 'Unverified';
 }
 
+function getOpportunityApplicationUrl(item) {
+  if (item.applicationUrlVerified !== true) return null;
+  if (typeof item.applicationUrl !== 'string' || !item.applicationUrl) return null;
+
+  try {
+    const url = new URL(item.applicationUrl);
+    if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return null;
+    return item.applicationUrl;
+  } catch {
+    return null;
+  }
+}
+
 // Update state and re-render
 function setState(next) {
   state = Object.assign({}, state, next);
@@ -73,34 +86,44 @@ function render() {
 // Initial state
 function renderInitial() {
   setStageBusy(false);
+  stage.classList.remove('stage-opportunities');
   stage.innerHTML = '';
-  const opening = document.createElement('section');
-  opening.className = 'opening';
-  opening.innerHTML = `
-    <p class="kicker">Personal knowledge archive <span aria-hidden="true">—</span> 01</p>
-    <h1>Alvin Phiri</h1>
-    <p class="role">Software Engineer</p>
-    <p class="opening-summary">I build full-stack systems across application and infrastructure layers.</p>
-    <div class="actions">
-      <button id="btn-explore" class="action-link" type="button">Explore the archive <span aria-hidden="true">→</span></button>
-    </div>
+  const home = document.createElement('section');
+  home.className = 'home-view';
+  home.innerHTML = `
+    <header class="home-heading">
+      <p class="kicker">Alvin Phiri <span aria-hidden="true">/</span> Software Engineer</p>
+      <h1>Three ways to explore my work.</h1>
+      <p>Engineering, selected opportunities, and the study of capital — each with its own space.</p>
+    </header>
+    <nav class="destination-grid" aria-label="Portfolio destinations">
+      <button class="destination-card destination-folio" type="button" data-destination="folio">
+        <span class="destination-label">01 / Engineering</span>
+        <span class="destination-title">Folio</span>
+        <span class="destination-description">Projects, notes, and evidence from my engineering work.</span>
+        <span class="destination-action">Explore Folio <span aria-hidden="true">→</span></span>
+      </button>
+      <button class="destination-card destination-opportunities" type="button" data-destination="opportunities">
+        <span class="destination-label">02 / Career</span>
+        <span class="destination-title">Opportunities</span>
+        <span class="destination-description">A curated board of roles, with the details available here.</span>
+        <span class="destination-action">Browse opportunities <span aria-hidden="true">→</span></span>
+      </button>
+      <a class="destination-card destination-capital" href="./capital/">
+        <span class="destination-label">03 / Investment</span>
+        <span class="destination-title">Capital</span>
+        <span class="destination-description">A separate space for learning how capital moves.</span>
+        <span class="destination-action">Explore Capital <span aria-hidden="true">→</span></span>
+      </a>
+    </nav>
   `;
-  stage.appendChild(opening);
-
-  const capital = document.createElement('section');
-  capital.className = 'capital-surface';
-  capital.setAttribute('aria-labelledby', 'capital-title');
-  capital.innerHTML = `
-    <p class="capital-label">ALVIN / CAPITAL</p>
-    <h2 id="capital-title">Learning how capital moves.</h2>
-    <p class="capital-copy">I'm documenting my journey into property and business investment — the opportunities, the numbers, the structures, and what actually makes an investment worth considering.</p>
-    <p class="capital-copy">If you're interested in exploring opportunities with me, leave your details.</p>
-    <a class="capital-action" href="./capital/">→ Explore investment</a>
-  `;
-  stage.appendChild(capital);
-  document.getElementById('btn-explore').addEventListener('click', async () => {
+  stage.appendChild(home);
+  home.querySelector('[data-destination="folio"]').addEventListener('click', async () => {
     await loadManifest();
     setState({ view: 'topics' });
+  });
+  home.querySelector('[data-destination="opportunities"]').addEventListener('click', () => {
+    setState({ view: 'opportunities' });
   });
 }
 
@@ -112,7 +135,7 @@ function sanitize(html) {
 }
 
 // Simple markdown renderer: h1-h6, paragraphs, lists, bold, code blocks
-function mdToHtml(md) {
+function mdToHtml(md, { allowExternalLinks = true } = {}) {
   const lines = md.split(/\r?\n/);
   let out = '';
   let inList = false;
@@ -155,9 +178,9 @@ function mdToHtml(md) {
     if (line.startsWith('#')) {
       const m = line.match(/^(#{1,6})\s+(.*)$/);
       if (m) {
-        out += `<h${m[1].length}>${sanitizeAndFormat(m[2])}</h${m[1].length}>`;
+        out += `<h${m[1].length}>${sanitizeAndFormat(m[2], { allowExternalLinks })}</h${m[1].length}>`;
       } else {
-        out += `<p>${sanitizeAndFormat(line)}</p>`;
+        out += `<p>${sanitizeAndFormat(line, { allowExternalLinks })}</p>`;
       }
       if (inList) {
         out += '</ul>';
@@ -170,7 +193,7 @@ function mdToHtml(md) {
         out += '<ul>';
         inList = true;
       }
-      out += `<li>${sanitizeAndFormat(line.slice(2))}</li>`;
+      out += `<li>${sanitizeAndFormat(line.slice(2), { allowExternalLinks })}</li>`;
     }
     // Regular paragraphs
     else {
@@ -178,7 +201,7 @@ function mdToHtml(md) {
         out += '</ul>';
         inList = false;
       }
-      out += `<p>${sanitizeAndFormat(trimmed)}</p>`;
+      out += `<p>${sanitizeAndFormat(trimmed, { allowExternalLinks })}</p>`;
     }
   }
 
@@ -197,7 +220,7 @@ function mdToHtml(md) {
 // Render safe Markdown links while preserving HTML safety. Relative links are
 // resolved from the repository's content root so documents can point to local
 // static assets (for example, the downloadable CV PDF).
-function formatLinks(text) {
+function formatLinks(text, { allowExternalLinks = true } = {}) {
   const linkPattern = /\[([^\]]+)\]\(([^\s)]+)\)/g;
   let html = '';
   let lastIndex = 0;
@@ -210,11 +233,16 @@ function formatLinks(text) {
       const url = new URL(match[2], contentBase);
       if (!['https:', 'http:'].includes(url.protocol)) throw new Error('Unsupported link protocol');
       const external = url.origin !== window.location.origin;
+      if (external && !allowExternalLinks) {
+        html += sanitize(match[1]);
+        lastIndex = linkPattern.lastIndex;
+        continue;
+      }
       html += '<a href="' + sanitize(url.href) + '"' +
         (external ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' +
         sanitize(match[1]) + '</a>';
     } catch (e) {
-      html += sanitize(match[0]);
+      html += sanitize(allowExternalLinks ? match[0] : match[1]);
     }
 
     lastIndex = linkPattern.lastIndex;
@@ -240,21 +268,29 @@ function formatImages(text) {
 }
 
 // Format text with **bold** and HTTPS links while preserving HTML safety
-function sanitizeAndFormat(text) {
-  const imageParts = formatImages(text);
-  if (imageParts !== text) return imageParts;
+function sanitizeAndFormat(text, { allowExternalLinks = true } = {}) {
+  const safeText = allowExternalLinks
+    ? text
+    : text
+      .replace(/!\[([^\]]*)\]\((?:https?:)?\/\/[^\s)]+\)/gi, '$1')
+      .replace(/\[([^\]]+)\]\((?:https?:\/\/|ftp:\/\/|mailto:|www\.)[^\s)]+\)/gi, '$1')
+      .replace(/\b(?:https?:\/\/|ftp:\/\/|mailto:)[^\s)]+/gi, '')
+      .replace(/\bwww\.[^\s)]+/gi, '')
+      .replace(/\b(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s)]*)?/gi, '');
+  const imageParts = formatImages(safeText);
+  if (imageParts !== safeText) return imageParts;
   // Split on ** patterns, capturing the bold sections
-  const parts = text.split(/(\*\*[^*]+\*\*)/);
+  const parts = safeText.split(/(\*\*[^*]+\*\*)/);
   let html = '';
   
   for (const part of parts) {
     if (part.startsWith('**') && part.endsWith('**')) {
       // Bold section
       const content = part.slice(2, -2);
-      html += '<strong>' + formatLinks(content) + '</strong>';
+      html += '<strong>' + formatLinks(content, { allowExternalLinks }) + '</strong>';
     } else if (part) {
       // Regular text
-      html += formatLinks(part);
+      html += formatLinks(part, { allowExternalLinks });
     }
   }
   
@@ -266,6 +302,7 @@ async function showTopics() {
   const data = await loadManifest();
   if (state.view !== 'topics') return;
   setStageBusy(false);
+  stage.classList.remove('stage-opportunities');
   const topics = [
     { id: 'about', title: 'About / Identity', file: 'about.md' },
     { id: 'projects', title: 'Projects', file: null },
@@ -315,7 +352,7 @@ async function showTopics() {
       const item = data.items.find(i => i.path === t.file);
       p.textContent = item ? (item.summary || 'Open to read') : 'No content';
     } else if (t.id === 'opportunities') {
-      p.textContent = 'Research-backed opportunities, with preparation notes and original sources';
+      p.textContent = 'Selected roles with verified details and referral-only application links';
     } else {
       p.textContent = 'Explore projects';
     }
@@ -353,103 +390,113 @@ async function showOpportunitiesList() {
   if (state.view !== 'opportunities') return;
   setStageBusy(false);
 
+  stage.classList.add('stage-opportunities');
   stage.innerHTML = '';
   const wrap = document.createElement('section');
-  wrap.className = 'archive-view opportunities-view';
+  wrap.className = 'opportunities-view';
   wrap.innerHTML = `
-    <header class="view-heading">
-      <p class="kicker">Curated opportunities <span aria-hidden="true">—</span> 04</p>
-      <h1>Opportunities, considered.</h1>
-      <p>Research briefs for understanding the role, preparing thoughtfully, and reaching the original source.</p>
+    <header class="opportunities-heading">
+      <p class="opportunities-eyebrow">Career board</p>
+      <h1>Opportunities</h1>
+      <p>Selected roles, with the available details collected in one place.</p>
     </header>
   `;
 
   const back = document.createElement('button');
   back.type = 'button';
-  back.className = 'return-link';
-  back.innerHTML = '<span aria-hidden="true">←</span> Return to index';
-  back.addEventListener('click', () => setState({ view: 'topics' }));
+  back.className = 'opportunities-back';
+  back.textContent = '← Home';
+  back.addEventListener('click', () => setState({ view: 'initial' }));
 
   if (manifestLoadFailed) {
-    wrap.insertAdjacentHTML('beforeend', '<p class="empty-state">The archive index could not be loaded, so opportunity records are unavailable. Try again after reloading the archive.</p>');
+    const error = document.createElement('p');
+    error.className = 'opportunities-empty';
+    error.textContent = 'Opportunities could not be loaded. Please try again later.';
+    wrap.appendChild(error);
     wrap.appendChild(back);
     stage.appendChild(wrap);
     focusStage();
     return;
   }
 
-  const opportunities = data.items
-    .filter(item => item.kind === 'opportunity')
-    .sort((a, b) => {
-      const aDate = Date.parse(a.dateDiscovered || '');
-      const bDate = Date.parse(b.dateDiscovered || '');
-      if (Number.isNaN(aDate)) return Number.isNaN(bDate) ? 0 : 1;
-      if (Number.isNaN(bDate)) return -1;
-      return bDate - aDate;
-    });
+  const opportunities = data.items.filter(item => {
+    if (item.kind !== 'opportunity') return false;
+    if (!getOpportunityApplicationUrl(item)) {
+      console.error(`Opportunity "${item.title || item.path}" is not shown because its application destination is not verified.`);
+      return false;
+    }
+    return true;
+  });
 
   if (opportunities.length === 0) {
-    wrap.insertAdjacentHTML('beforeend', '<p class="empty-state">No verified professional opportunities are listed yet. Records will appear here when their source and details have been checked.</p>');
+    const empty = document.createElement('p');
+    empty.className = 'opportunities-empty';
+    empty.textContent = 'No opportunities are available here yet.';
+    wrap.appendChild(empty);
     wrap.appendChild(back);
     stage.appendChild(wrap);
     focusStage();
     return;
   }
 
-  const list = document.createElement('div');
-  list.className = 'archive-list opportunity-list';
+  const grid = document.createElement('div');
+  grid.className = 'opportunity-grid';
 
-  for (const [index, opportunity] of opportunities.entries()) {
+  for (const opportunity of opportunities) {
     const entry = document.createElement('button');
-    entry.className = 'archive-entry';
+    entry.className = 'opportunity-card';
     entry.type = 'button';
     entry.setAttribute('aria-label', `Open ${opportunity.title || 'opportunity record'}; status ${getOpportunityStatus(opportunity)}`);
 
-    const number = document.createElement('span');
-    number.className = 'entry-number';
-    number.textContent = String(index + 1).padStart(2, '0');
-    number.setAttribute('aria-hidden', 'true');
-    entry.appendChild(number);
+    const organization = document.createElement('span');
+    organization.className = 'opportunity-card-organization';
+    organization.textContent = opportunity.organization || '';
+    if (organization.textContent) entry.appendChild(organization);
 
-    const copy = document.createElement('span');
-    copy.className = 'entry-copy';
     const title = document.createElement('span');
-    title.className = 'entry-title';
+    title.className = 'opportunity-card-title';
     title.textContent = opportunity.title || opportunity.path.replace(/^opportunities\//, '').replace('.md', '');
-    copy.appendChild(title);
+    entry.appendChild(title);
 
-    const summary = document.createElement('span');
-    summary.className = 'entry-summary';
-    summary.textContent = opportunity.summary || 'Open to read the opportunity brief';
-    copy.appendChild(summary);
+    if (opportunity.summary) {
+      const summary = document.createElement('span');
+      summary.className = 'opportunity-card-summary';
+      summary.textContent = opportunity.summary;
+      entry.appendChild(summary);
+    }
 
     const metadata = [
-      opportunity.organization,
-      opportunity.location,
-      opportunity.workArrangement,
-      opportunity.employmentArrangement,
-      opportunity.dateDiscovered ? `Discovered ${opportunity.dateDiscovered}` : null,
-      opportunity.lastVerified ? `Verified ${opportunity.lastVerified}` : 'Verification date not recorded',
-      opportunity.deadline ? `Deadline ${opportunity.deadline}` : null,
-      `Status: ${getOpportunityStatus(opportunity)}`
-    ].filter(Boolean);
-    const details = document.createElement('span');
-    details.className = 'entry-meta';
-    details.textContent = metadata.join(' · ');
-    copy.appendChild(details);
-    entry.appendChild(copy);
+      ['Location', opportunity.location],
+      ['Work arrangement', opportunity.workArrangement],
+      ['Employment type', opportunity.employmentArrangement || opportunity.opportunityType],
+      ['Compensation', opportunity.compensation],
+      ['Status', opportunityStatuses.includes(opportunity.status) && opportunity.status !== 'Unverified' ? opportunity.status : null]
+    ].filter(([, value]) => value);
+    if (metadata.length) {
+      const details = document.createElement('dl');
+      details.className = 'opportunity-card-metadata';
+      for (const [label, value] of metadata) {
+        const row = document.createElement('div');
+        const term = document.createElement('dt');
+        term.textContent = label;
+        const description = document.createElement('dd');
+        description.textContent = value;
+        row.append(term, description);
+        details.appendChild(row);
+      }
+      entry.appendChild(details);
+    }
 
-    const arrow = document.createElement('span');
-    arrow.className = 'entry-arrow';
-    arrow.textContent = '→';
-    arrow.setAttribute('aria-hidden', 'true');
-    entry.appendChild(arrow);
+    const action = document.createElement('span');
+    action.className = 'opportunity-card-action';
+    action.textContent = 'View opportunity →';
+    entry.appendChild(action);
 
     entry.addEventListener('click', () => setState({ view: 'content', selected: opportunity.path }));
-    list.appendChild(entry);
+    grid.appendChild(entry);
   }
 
-  wrap.appendChild(list);
+  wrap.appendChild(grid);
   wrap.appendChild(back);
   stage.appendChild(wrap);
   focusStage();
@@ -460,6 +507,7 @@ async function showProjectsList() {
   const data = await loadManifest();
   if (state.view !== 'projects') return;
   setStageBusy(false);
+  stage.classList.remove('stage-opportunities');
   const projects = data.items.filter(i => i.path.startsWith('projects/') && !i.parent);
 
   stage.innerHTML = '';
@@ -590,11 +638,19 @@ function navigateBack(path) {
 function displayContent(md, path) {
   setStageBusy(false);
   stage.innerHTML = '';
+  const record = manifest && manifest.items.find(item => item.path === path);
+  const isOpportunity = record?.kind === 'opportunity';
+  stage.classList.toggle('stage-opportunities', isOpportunity);
+
+  if (isOpportunity) {
+    displayOpportunityContent(md, record, path);
+    return;
+  }
+
   const div = document.createElement('article');
   div.className = 'document content';
   div.innerHTML = mdToHtml(md);
 
-  const record = manifest && manifest.items.find(item => item.path === path);
   const title = div.querySelector('h1');
   if (title) title.classList.add('document-title');
   const meta = document.createElement('p');
@@ -670,6 +726,78 @@ function displayContent(md, path) {
   div.appendChild(back);
 
   stage.appendChild(div);
+  focusStage({ resetScroll: true });
+}
+
+function displayOpportunityContent(md, record, path) {
+  const detail = document.createElement('article');
+  detail.className = 'opportunity-detail';
+
+  const header = document.createElement('header');
+  header.className = 'opportunity-detail-heading';
+  const title = document.createElement('h1');
+  title.textContent = record.title || path.replace(/^opportunities\//, '').replace('.md', '');
+  header.appendChild(title);
+  if (record.organization) {
+    const organization = document.createElement('p');
+    organization.className = 'opportunity-detail-organization';
+    organization.textContent = record.organization;
+    header.appendChild(organization);
+  }
+  detail.appendChild(header);
+
+  const metadata = [
+    ['Location', record.location],
+    ['Eligible countries', record.eligibleCountries],
+    ['Work arrangement', record.workArrangement],
+    ['Employment type', record.employmentArrangement || record.opportunityType],
+    ['Compensation', record.compensation],
+    ['Working hours', record.workingHours],
+    ['Application deadline', record.deadline],
+    ['Status', opportunityStatuses.includes(record.status) && record.status !== 'Unverified' ? record.status : null]
+  ].filter(([, value]) => value);
+  if (metadata.length) {
+    const list = document.createElement('dl');
+    list.className = 'opportunity-detail-metadata';
+    for (const [label, value] of metadata) {
+      const item = document.createElement('div');
+      const term = document.createElement('dt');
+      term.textContent = label;
+      const description = document.createElement('dd');
+      description.textContent = value;
+      item.append(term, description);
+      list.appendChild(item);
+    }
+    detail.appendChild(list);
+  }
+
+  const body = document.createElement('div');
+  body.className = 'opportunity-detail-copy';
+  const content = md.replace(/^# [^\r\n]*(?:\r?\n+|$)/, '');
+  body.innerHTML = mdToHtml(content, { allowExternalLinks: false });
+  detail.appendChild(body);
+
+  const applicationUrl = getOpportunityApplicationUrl(record);
+  if (applicationUrl) {
+    const apply = document.createElement('a');
+    apply.className = 'opportunity-apply';
+    apply.setAttribute('href', applicationUrl);
+    apply.target = '_blank';
+    apply.rel = 'noopener noreferrer';
+    apply.textContent = "I'm ready to apply — Apply now";
+    detail.appendChild(apply);
+  } else {
+    console.error(`Opportunity "${record.title || path}" is missing a verified application destination.`);
+  }
+
+  const back = document.createElement('button');
+  back.type = 'button';
+  back.className = 'opportunities-back';
+  back.textContent = '← Back to opportunities';
+  back.addEventListener('click', () => setState({ view: 'opportunities', selected: null }));
+  detail.appendChild(back);
+
+  stage.appendChild(detail);
   focusStage({ resetScroll: true });
 }
 
