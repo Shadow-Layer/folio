@@ -1,5 +1,21 @@
 # 26
 
+## 2026-11-06 — Independent Opportunities board and selected records
+
+Promoted Opportunities to an independent homepage destination alongside Folio and Capital, with a responsive card board and dedicated detail views. Added the 11 opportunities selected by the owner from a public referral catalogue as Markdown records and manifest entries. Selection approved preparing and adding these records; it did not confirm that applications remain open.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Added peer homepage destinations, the independent Opportunities board and detail experience, referral-URL validation, and omission of unverified application actions. |
+| `styles.css` | Added distinct responsive styles for the destination cards and Opportunities board/detail views. |
+| `content/manifest.json` | Added 11 selected opportunity entries with `Unverified` status and the complete supplied catalogue referral URL, including its referral code, link identifier, and UTM parameters. |
+| `content/opportunities/` | Added the 11 corresponding opportunity briefs. Individual listing URLs and external source links are excluded from public records; conflicting role data is disclosed. |
+| `content/opportunities/README.md`, `TEMPLATE.md`, `WORKFLOW.md` | Documented the review-before-publication process, referral-link policy, and separate interview-preparation workflow. |
+
+The public board displays no referral-platform branding. Every application action uses the exact supplied catalogue URL; no direct listing URL is exposed. All statuses remain `Unverified` because application availability was not confirmed. No commit or deployment was made.
+
+**Validation:** JavaScript syntax, manifest JSON, all 11 opportunity paths, unique opportunity paths, exact referral URL and attribution fields, valid statuses, and `git diff --check`. Local browser validation confirmed 11 cards, a detail page with the sole external referral CTA, and no referral-platform branding on the board or detail view. Mobile viewport emulation and a real Capital-app regression test were not completed.
+
 ## 2026-11-06 — Opportunities discovery and preparation
 
 Added an Opportunities destination to the main portfolio archive, with a chronological listing for manifest-tagged records, explicit opportunity status, a graceful empty state, authoring guidance, and a reusable Markdown research-brief template. No demonstration opportunity was added because the root archive contains no verified professional listing. The separate `capital/` application is unchanged.
@@ -14,6 +30,17 @@ Added an Opportunities destination to the main portfolio archive, with a chronol
 | `content/manifest.json` | No sample opportunity record added; existing records and parent-child relationships remain intact. |
 
 **Validation:** `node --check main.js`; manifest JSON and all 12 referenced content paths; `git diff --check`; local browser checks of archive navigation, opportunity empty/list/detail states, status fallback and chronology using temporary in-memory fixtures, external-link marking, missing-record and manifest-error handling, existing Town Ruins parent/child navigation, and the independent Capital landing page. Mobile viewport emulation was unavailable in the browser session.
+
+### 2026-11-06 — Mock interview UX polish
+
+Refined the provider-selection experience for the mock interview launcher so the interaction feels clearer and more deliberate on both desktop and mobile.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Improved the provider selector to present clearer provider cards, enforce a selected-provider requirement before dispatching an external link, and keep the manual-copy fallback explicit. |
+| `styles.css` | Added stronger provider card styling, disabled state treatment for the open-link action, and clearer visual hierarchy for the interview selector and fallback path. |
+
+**Validation:** `node --check main.js`; local static serve check returned HTTP 200 for the portfolio page; no syntax regressions in the updated mock interview flow.
 
 ## 2608
 

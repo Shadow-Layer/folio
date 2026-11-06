@@ -443,3 +443,25 @@ A framework migration, CMS, database, general-purpose project schema engine, or 
 - **Unverified:** actual deployed runtime, nested Capital URL behavior, end-to-end Google Forms acceptance, WCAG conformance, browser compatibility, Core Web Vitals, and whether every tracked source-material artifact is intentionally public.
 
 **Inspection status:** Complete for source-level reconnaissance. No application changes, dependency installations, local execution, or live deployment tests were performed.
+
+---
+
+## Addendum — 2026-11-06 Opportunities implementation
+
+This addendum records repository changes made after the source-level inspection above. It supplements the original report rather than changing its evidence and scope statements.
+
+### Observed implementation
+
+- The root portfolio homepage now presents Folio, Opportunities, and Capital as peer destinations. Capital remains a separate application under `capital/`.
+- The root Opportunities view is a responsive card board backed by top-level `kind: "opportunity"` entries in `content/manifest.json`; each record opens a local detail view.
+- The manifest now contains 11 owner-selected opportunity records dated `2026-11-06`. Corresponding Markdown briefs live under `content/opportunities/`.
+- The records use `Unverified` status because current application availability was not confirmed. Listing-page accessibility or an application entry form was not treated as proof that an opportunity remains open.
+- Each manifest item stores the exact supplied catalogue referral URL, including `referralCode`, `linkId`, and UTM parameters, and sets `applicationUrlVerified: true`. The public detail view uses that URL for its application action. Individual listing URLs are not stored in public Markdown or manifest metadata.
+- Public Opportunities pages omit referral-platform branding. The opportunity Markdown renderer suppresses external links and raw URLs from record content; the referral application action is rendered separately from manifest metadata.
+- Intake, selection, proposal, approval, validation, and separate interview preparation are documented in the Opportunities README, template, and workflow guide.
+
+### Validation and limitations
+
+JavaScript syntax and manifest JSON were checked. All 11 manifest opportunity paths resolve, and local browser inspection confirmed 11 board cards, a dedicated detail view, the supplied attributed referral CTA, and no platform branding on the public board/detail view. Referral-link and status consistency and `git diff --check` were also validated.
+
+The browser check did not verify a narrow viewport. A live Capital regression test and production deployment test were not performed. The records remain `Unverified`; their current application availability and deadlines are unknown. No commit or deployment was made as part of this update.

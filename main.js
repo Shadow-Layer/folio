@@ -1029,7 +1029,7 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
   panel.setAttribute('aria-labelledby', 'mock-interview-title');
   panel.innerHTML = `
     <h2 id="mock-interview-title">Choose your AI interviewer</h2>
-    <p class="mock-interview-note">The selected assistant is external. Review the prompt below. It is not sent until you open a prefilled link or paste the copied prompt into an assistant.</p>
+    <p class="mock-interview-note">This interview takes place outside the portfolio. Review the prompt, choose an assistant, and send when you are ready.</p>
     <p class="mock-interview-candidate-warning" hidden></p>
     <fieldset class="mock-interview-providers">
       <legend>Choose one provider</legend>
@@ -1039,7 +1039,7 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
     <textarea id="mock-interview-prompt" class="mock-interview-prompt" readonly rows="12"></textarea>
     <div class="mock-interview-actions">
       <button class="mock-interview-copy" type="button" disabled>Copy interview prompt</button>
-      <a class="mock-interview-open" target="_blank" rel="noopener noreferrer" hidden></a>
+      <a class="mock-interview-open is-disabled" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">Select a provider to continue</a>
     </div>
   `;
 
@@ -1052,6 +1052,13 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
   let prompt = '';
   let selectedProvider = null;
 
+  openLink.addEventListener('click', (event) => {
+    if (!selectedProvider || !prompt || selectedProvider === 'other') {
+      event.preventDefault();
+      return;
+    }
+  });
+
   for (const [key, provider] of Object.entries(mockInterviewProviders)) {
     const label = document.createElement('label');
     label.className = 'mock-interview-provider';
@@ -1061,11 +1068,15 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
     radio.value = key;
     radio.addEventListener('change', () => {
       selectedProvider = key;
-      openLink.hidden = true;
-      copyButton.hidden = false;
+      openLink.classList.remove('is-disabled');
+      openLink.setAttribute('aria-disabled', 'false');
       copyButton.disabled = !prompt;
 
       if (key === 'other') {
+        openLink.removeAttribute('href');
+        openLink.textContent = 'Open external assistant';
+        openLink.setAttribute('aria-disabled', 'true');
+        openLink.classList.add('is-disabled');
         status.textContent = 'Copy the prompt, open your preferred assistant, paste it into the chat, and press Send.';
         copyButton.textContent = 'Copy interview prompt';
         return;
@@ -1073,10 +1084,9 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
 
       const launchUrl = getMockInterviewLaunchUrl(provider, prompt);
       openLink.href = launchUrl || provider.url;
-      openLink.textContent = launchUrl
-        ? `Open ${provider.label} with prompt`
-        : `Open ${provider.label} — paste prompt`;
-      openLink.hidden = false;
+      openLink.textContent = launchUrl ? `Open ${provider.label}` : `Open ${provider.label} and paste prompt`;
+      openLink.classList.remove('is-disabled');
+      openLink.setAttribute('aria-disabled', 'false');
       copyButton.textContent = 'Copy interview prompt';
 
       if (launchUrl) {
@@ -1085,9 +1095,16 @@ function createMockInterviewPanel(record, opportunityMarkdown) {
         status.textContent = `${provider.label} does not have a verified prefilled launch here${provider.promptParameter ? ' for a prompt this long' : ''}. Copy the prompt, open ${provider.label}, paste it into the chat, and press Send.`;
       }
     });
+    const content = document.createElement('span');
+    content.className = 'mock-interview-provider-content';
     const name = document.createElement('span');
+    name.className = 'mock-interview-provider-name';
     name.textContent = provider.label;
-    label.append(radio, name);
+    const meta = document.createElement('small');
+    meta.className = 'mock-interview-provider-meta';
+    meta.textContent = key === 'other' ? 'Paste manually' : provider.url ? 'Open in a new tab' : 'Fallback';
+    content.append(name, meta);
+    label.append(radio, content);
     fieldset.appendChild(label);
   }
 
