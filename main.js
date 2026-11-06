@@ -711,8 +711,6 @@ async function showOpportunitiesList() {
 
     const metadata = [
       ['Location', opportunity.location],
-      ['Work arrangement', opportunity.workArrangement],
-      ['Employment type', opportunity.employmentArrangement || opportunity.opportunityType],
       ['Compensation', opportunity.compensation],
       ['Status', opportunityStatuses.includes(opportunity.status) && opportunity.status !== 'Unverified' ? opportunity.status : null]
     ].filter(([, value]) => value);
@@ -1187,6 +1185,7 @@ function displayOpportunityContent(md, record, path) {
     ['Employment type', record.employmentArrangement || record.opportunityType],
     ['Compensation', record.compensation],
     ['Working hours', record.workingHours],
+    ['Date discovered', record.dateDiscovered],
     ['Application deadline', record.deadline],
     ['Status', opportunityStatuses.includes(record.status) && record.status !== 'Unverified' ? record.status : null]
   ].filter(([, value]) => value);
@@ -1207,12 +1206,32 @@ function displayOpportunityContent(md, record, path) {
 
   const body = document.createElement('div');
   body.className = 'opportunity-detail-copy';
-  const content = md.replace(/^# [^\r\n]*(?:\r?\n+|$)/, '');
+  const content = md
+    .replace(/^# [^\r\n]*(?:\r?\n+|$)/, '')
+    .split(/(?=^## )/m)
+    .filter((part) => !/^## Identification\s*(?:\r?\n|$)/im.test(part.trimStart()))
+    .join('');
   body.innerHTML = mdToHtml(content, { allowExternalLinks: false });
+  let section = null;
+  for (const child of [...body.childNodes]) {
+    if (child.nodeType === Node.ELEMENT_NODE && child.tagName === 'H2') {
+      section = document.createElement('section');
+      section.className = 'opportunity-content-card';
+      body.appendChild(section);
+    }
+    if (!section) {
+      section = document.createElement('section');
+      section.className = 'opportunity-content-card';
+      body.appendChild(section);
+    }
+    section.appendChild(child);
+  }
   detail.appendChild(body);
 
   const actions = document.createElement('div');
   actions.className = 'opportunity-actions';
+  actions.setAttribute('role', 'group');
+  actions.setAttribute('aria-label', 'Opportunity actions');
 
   const share = document.createElement('button');
   share.type = 'button';
@@ -1227,8 +1246,6 @@ function displayOpportunityContent(md, record, path) {
     const copied = await copyTextToClipboard(getOpportunityShareUrl(slug));
     feedback.textContent = copied ? 'Link copied' : 'Copy failed. Copy the address bar URL instead.';
   });
-  actions.append(share, feedback);
-
   const applicationUrl = getOpportunityApplicationUrl(record);
   if (applicationUrl) {
     const apply = document.createElement('a');
@@ -1241,8 +1258,6 @@ function displayOpportunityContent(md, record, path) {
   } else {
     console.error(`Opportunity "${record.title || path}" is missing a verified application destination.`);
   }
-  detail.appendChild(actions);
-
   const interviewButton = document.createElement('button');
   interviewButton.type = 'button';
   interviewButton.className = 'mock-interview-trigger';
@@ -1268,14 +1283,14 @@ function displayOpportunityContent(md, record, path) {
       }
     }
   });
-  detail.append(interviewButton, interviewPanel);
 
   const back = document.createElement('button');
   back.type = 'button';
   back.className = 'opportunities-back';
   back.textContent = '← Back to opportunities';
   back.addEventListener('click', returnToOpportunities);
-  detail.appendChild(back);
+  actions.append(interviewButton, share, feedback, back);
+  detail.append(actions, interviewPanel);
 
   stage.appendChild(detail);
   focusStage({ resetScroll: true });

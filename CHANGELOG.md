@@ -1,5 +1,39 @@
 # 26
 
+## 2026-11-06 — Keep opportunity actions floating
+
+Grouped the opportunity detail actions into a fixed dock so the primary actions remain available while reading long opportunity briefs.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Grouped Share opportunity, Apply now, Start mock interview, and Back to opportunities in one labelled action group; kept the mock interview panel in the page flow. |
+| `styles.css` | Fixed the action group near the viewport bottom, added a compact mobile layout and safe-area spacing, and reserved content space so the dock does not obscure the brief. |
+
+**Validation:** `node --check main.js` and `git diff --check -- main.js styles.css` passed. No browser viewport or production deployment test was performed.
+
+## 2026-11-06 — Bust stale homepage asset caches
+
+Added versioned URLs for the homepage stylesheet and module script. The hosting/CDN cache retains these stable asset paths for four hours, so visitors could receive older JavaScript and CSS after a release and miss the new destination calls to action or opportunity share control.
+
+| Area | Change |
+| --- | --- |
+| `index.html` | Added a release query version to `styles.css` and `main.js` so browsers and the CDN request the updated homepage assets instead of reusing stale cached files. |
+
+**Validation:** Confirmed the live CSS and JavaScript asset responses advertise a four-hour cache lifetime; checked the updated HTML references point to both versioned assets. A production deploy is still required for the cache fix to reach visitors.
+
+## 2026-11-06 — Editorial homepage and shareable opportunity links
+
+Refined the homepage into three distinct editorial calls to action for Folio, Career, and Capital, and added shareable deep links for individual opportunity records without introducing a framework or altering the existing Capital flow.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Redesigned the landing page destination cards with distinct visual identities and stronger editorial hierarchy; added hash-based opportunity routing (`#opportunity/<slug>`) for direct links; restored the correct opportunity on page load and refresh; preserved back/forward navigation and graceful invalid-link fallback. |
+| `styles.css` | Added bespoke styling for the three destination cards, subtle directionality and hover/focus behaviour, and the share-action treatment without competing with the primary application CTA. |
+| `content/manifest.json` | Used the manifest as the canonical source for opportunity identity and slug validation, preserving stable links while preventing accidental mismatches. |
+| `main.js` / `styles.css` | Added the Share opportunity CTA with Clipboard API copy support, fallback copy handling, and clear success/failure feedback. |
+
+**Validation:** Local browser smoke tests confirmed three visible destination cards on the homepage, a valid opportunity deep-link restoring the correct detail view, invalid-routes reverting to the opportunities board with a notice, browser history navigation preserving route state, and the share CTA producing a canonical URL while keeping the referral URL isolated to the Apply action. No production deployment or unrelated route changes were made.
+
 ## 2026-11-06 — Independent Opportunities board and selected records
 
 Promoted Opportunities to an independent homepage destination alongside Folio and Capital, with a responsive card board and dedicated detail views. Added the 11 opportunities selected by the owner from a public referral catalogue as Markdown records and manifest entries. Selection approved preparing and adding these records; it did not confirm that applications remain open.

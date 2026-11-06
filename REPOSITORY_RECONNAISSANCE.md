@@ -465,3 +465,9 @@ This addendum records repository changes made after the source-level inspection 
 JavaScript syntax and manifest JSON were checked. All 11 manifest opportunity paths resolve, and local browser inspection confirmed 11 board cards, a dedicated detail view, the supplied attributed referral CTA, and no platform branding on the public board/detail view. Referral-link and status consistency and `git diff --check` were also validated.
 
 The browser check did not verify a narrow viewport. A live Capital regression test and production deployment test were not performed. The records remain `Unverified`; their current application availability and deadlines are unknown. No commit or deployment was made as part of this update.
+
+## Addendum — 2026-11-06 Floating opportunity actions
+
+The opportunity detail renderer now groups Share opportunity, Apply now, Start mock interview, and Back to opportunities in one labelled action group. CSS fixes the group near the viewport bottom so it remains visible while the visitor scrolls through a long brief. The mock interview panel remains in the content flow rather than becoming part of the dock.
+
+The dock uses a two-column layout at mobile widths, honors the bottom safe-area inset, and reserves additional space after the brief to avoid covering its final content. JavaScript syntax and whitespace checks passed (`node --check main.js` and `git diff --check -- main.js styles.css`). Narrow viewport behavior was not browser-tested; no production deployment was performed.
