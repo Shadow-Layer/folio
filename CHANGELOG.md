@@ -1,5 +1,16 @@
 # 26
 
+## 2026-11-06 — Add card hierarchy to opportunity views
+
+Made the opportunity board and detail page feel more like a set of focused cards, reduced repeated brief text, and gave the application action stronger visual priority.
+
+| Area | Change |
+| --- | --- |
+| `main.js` | Removed the repeated Identification section from rendered brief copy while retaining its details in metadata cards; added discovery date metadata; reduced listing-card metadata repetition; grouped brief sections into separate cards; placed Apply first in the action dock. |
+| `styles.css` | Added depth and hierarchy to opportunity listing, metadata, and brief cards; shortened listing summaries; emphasized the Apply action and refined supporting actions. |
+
+**Validation:** `node --check main.js`, `git diff --check -- main.js styles.css`, and a local check that the rendered brief headings remain while Identification is excluded passed. No browser viewport or production deployment test was performed.
+
 ## 2026-11-06 — Keep opportunity actions floating
 
 Grouped the opportunity detail actions into a fixed dock so the primary actions remain available while reading long opportunity briefs.
