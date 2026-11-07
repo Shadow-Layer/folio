@@ -485,7 +485,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
   font-weight: 700;
 }
 .mock-interview-trigger:hover { border-color: #527d6d; background: #e4efe7; }
-.mock-interview-trigger:focus-visible, .mock-interview-copy:focus-visible, .mock-interview-open:focus-visible { outline: 2px solid #316459; outline-offset: 3px; }
+.mock-interview-trigger:focus-visible, .mock-interview-launch:focus-visible { outline: 2px solid #316459; outline-offset: 3px; }
 .mock-interview-panel {
   margin-top: 1rem;
   padding: clamp(1rem, 3vw, 1.5rem);
@@ -495,10 +495,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 }
 .mock-interview-panel[hidden] { display: none; }
 .mock-interview-panel h2 { margin: 0; color: #253a33; font-size: 1.15rem; }
-.mock-interview-note, .mock-interview-status, .mock-interview-candidate-warning { color: #53645f; font-size: 0.82rem; line-height: 1.55; }
+.mock-interview-note, .mock-interview-status { color: #53645f; font-size: 0.82rem; line-height: 1.55; }
 .mock-interview-note { margin: 0.45rem 0 1rem; }
 .mock-interview-status { min-height: 1.25rem; margin: 0.8rem 0; }
-.mock-interview-candidate-warning { padding: 0.65rem 0.75rem; border-left: 3px solid #b9853f; background: #fbf5e9; }
 .mock-interview-providers { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 0; padding: 0; border: 0; }
 .mock-interview-providers legend { width: 100%; margin-bottom: 0.55rem; color: #53645f; font-size: 0.75rem; font-weight: 700; }
 .mock-interview-provider {
@@ -534,35 +533,35 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
   overflow-wrap: anywhere;
   resize: vertical;
 }
+.mock-interview-prompt.is-highlighted { outline: 3px solid #6c9a82; outline-offset: 3px; }
 .mock-interview-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.75rem; }
-.mock-interview-copy, .mock-interview-open {
+.mock-interview-launch {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 2.65rem;
+  max-width: 100%;
   padding: 0.6rem 0.8rem;
-  border: 1px solid #91aaa0;
+  border: 1px solid #245e4f;
   border-radius: 0.45rem;
-  color: #285447;
-  background: #fff;
+  color: #fff;
+  background: #245e4f;
   cursor: pointer;
   font: inherit;
   font-size: 0.8rem;
   font-weight: 650;
-  text-decoration: none;
+  overflow-wrap: anywhere;
 }
-.mock-interview-open { border-color: #245e4f; color: #fff; background: #245e4f; }
-.mock-interview-open:hover { border-color: #19493d; color: #fff; background: #19493d; }
-.mock-interview-open.is-disabled,
-.mock-interview-open.is-disabled:hover {
+.mock-interview-launch:hover:not(:disabled) { border-color: #19493d; background: #19493d; }
+.mock-interview-launch:disabled {
   border-color: #aebcb6;
   color: #687770;
   background: #edf3f0;
   cursor: not-allowed;
 }
-.mock-interview-copy:hover:not(:disabled) { border-color: #527d6d; background: #f4f8f5; }
-.mock-interview-copy:disabled { cursor: not-allowed; opacity: 0.55; }
-.mock-interview-actions [hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .mock-interview-prompt.is-highlighted { transition: none; }
+}
 .opportunity-apply {
   display: inline-flex;
   align-items: center;

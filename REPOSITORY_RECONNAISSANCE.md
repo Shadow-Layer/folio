@@ -471,3 +471,11 @@ The browser check did not verify a narrow viewport. A live Capital regression te
 The opportunity detail renderer now groups Share opportunity, Apply now, Start mock interview, and Back to opportunities in one labelled action group. CSS fixes the group near the viewport bottom so it remains visible while the visitor scrolls through a long brief. The mock interview panel remains in the content flow rather than becoming part of the dock.
 
 The dock uses a two-column layout at mobile widths, honors the bottom safe-area inset, and reserves additional space after the brief to avoid covering its final content. JavaScript syntax and whitespace checks passed (`node --check main.js` and `git diff --check -- main.js styles.css`). Narrow viewport behavior was not browser-tested; no production deployment was performed.
+
+## Addendum — 2026-11-06 Opportunity card hierarchy and CTAs
+
+The opportunity board now uses more distinct cards with shorter, clamped summaries and fewer repeated metadata fields. The detail view keeps the record's structured identification data in metadata cards, adds its discovery date, and omits the duplicate Identification prose section from the rendered brief. Remaining brief sections are rendered as individual cards.
+
+The fixed action dock now places the prominent **“I'm ready to apply — Apply now”** action first and gives it stronger contrast and size. Start mock interview is a secondary highlighted action; Share opportunity and Back to opportunities remain available as supporting controls. The desktop and mobile action dock structure is retained.
+
+JavaScript syntax, whitespace, and a local content-grouping check passed. The check confirmed that Identification is omitted while Overview, Opportunity details, and Eligibility and application remain. Browser viewport behavior and production deployment were not tested.

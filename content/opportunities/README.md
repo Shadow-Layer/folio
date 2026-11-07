@@ -12,7 +12,7 @@ Follow [WORKFLOW.md](WORKFLOW.md) for the full repeatable procedure. In short:
 4. Review the proposed record content and manifest metadata. The agent waits for explicit approval before adding selected records to `content/opportunities/` and `content/manifest.json`.
 5. Commits and deployment are separate actions and never happen automatically.
 
-Interview preparation is not part of this publication flow. Each opportunity detail page has a **Start mock interview** action that builds a prompt at runtime from that specific brief and available, evidence-based CV material. It is not written to the public opportunity record or manifest. The visitor must choose an external assistant; the prompt leaves the portfolio only when they open a prefilled link or paste the copied prompt into that assistant.
+Interview preparation is not part of this publication flow. Each opportunity detail page has a **Start mock interview** action that builds a neutral prompt at runtime from that specific opportunity's brief and metadata. Candidate background is not loaded or inferred; the interviewer is instructed to establish the candidate's experience through their answers. The visitor can review and edit the prompt, choose an external assistant, then use one action to copy the complete prompt and open that provider in a new tab.
 
 ## Published record conventions
 
@@ -35,7 +35,8 @@ The public template, manifest, and renderer are intentionally not an intake data
 
 ## Mock interview launcher
 
-- The launcher uses the selected opportunity's complete Markdown brief and relevant candidate evidence from `cv.md`. It excludes CV contact details and strips URLs and referral attribution from prompt context.
-- The prompt exists only in the visitor's browser. The portfolio does not run an interview or call an AI API.
-- ChatGPT's `?q=` prompt URL is used only when the encoded launch URL is within the configured length limit; otherwise the visitor copies the prompt. Claude and Gemini open at their provider destinations without prompt parameters because reliable prepopulation is not established. **Other / Copy prompt** always uses the copy fallback.
-- Provider destinations and the ChatGPT URL limit are centralized in `main.js`. Keep provider selection explicit and retain the copy fallback when provider behavior or URL length is uncertain.
+- The launcher uses only the selected opportunity's Markdown brief and available role metadata. It never loads `cv.md` or injects portfolio-owner information.
+- Candidate background is unknown by default. The prompt tells the interviewer not to assume qualifications or experience, to establish relevant background, and to evaluate the candidate's actual answers.
+- The prompt is editable and remains in the visitor's browser. The portfolio does not run an interview or call an AI API.
+- The visitor selects ChatGPT, Claude, or Gemini and uses one **Copy prompt & open [provider]** action. It copies the complete prompt and opens that provider in a new tab. ChatGPT's `?q=` prefill is used only when the URL is within the configured length limit; otherwise the user can paste the copied prompt. Claude and Gemini open at their provider destinations.
+- Provider destinations and the ChatGPT URL limit are centralized in `main.js`. Clipboard and popup failures are reported, with the prompt left selectable for manual copying.
